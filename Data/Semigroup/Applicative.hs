@@ -49,7 +49,7 @@ snocTraversal a = (<>) a . Traversal
 {-# RULES "snocTraversal" snoc = snocTraversal #-}
 
 newtype Ap f m = Ap { getApp :: f m } 
-  deriving (Eq,Ord,Show,Read,Functor,Applicative,Alternative)
+  deriving (Functor,Applicative)
 
 instance (Applicative f, Semigroup m) => Semigroup (Ap f m) where
   (<>) = liftA2 (<>)

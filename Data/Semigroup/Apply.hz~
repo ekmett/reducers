@@ -18,8 +18,11 @@ module Data.Semigroup.Apply
     , App(..)
     ) where
 
+import Control.Applicative
 import Control.Monad (void)
 import Data.Functor.Apply
+import Data.Functor.Plus
+import Data.Monoid (Monoid(..))
 import Data.Semigroup (Semigroup(..))
 import Data.Semigroup.Reducer (Reducer(..))
 

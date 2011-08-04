@@ -42,6 +42,8 @@ library
     Data.Semigroup.Applicative
     Data.Semigroup.Alt
     Data.Semigroup.Alternative
+    Data.Semigroup.Monad
+    Data.Semigroup.MonadPlus
 
 --  Data.Generator.Combinators
   ghc-options: -Wall 

@@ -46,15 +46,21 @@ module Data.Generator.Combinators
     , notElem
     ) where
 
-import Prelude hiding (mapM_, any, elem, filter, concatMap, and, or, all, sum, product, notElem, replicate, cycle, repeat)
+import Prelude hiding 
+  ( mapM_, any, all, elem, filter, concatMap, and, or
+  , sum, product, notElem, replicate, cycle, repeat
+  )
 import Control.Applicative
 import Control.Monad (MonadPlus)
 import Data.Generator
-import Data.Monoid (Monoid, mempty, Sum(..), Product(..), All(..), Any(..), First(..))
-import Data.Monoid.Applicative (Alt(..), Traversal(..))
-import Data.Monoid.Self (Self(..))
-import Data.Monoid.Monad (MonadSum(..), Action(..))
-import Data.Semigroup.Reducer (Reducer, unit)
+import Data.Monoid (Monoid(..))
+import Data.Semigroup (Semigroup(..), Sum(..), Product(..), All(..), Any(..), First(..))
+import Data.Semigroup.Applicative (Traversal(..))
+import Data.Semigroup.Alternative (Alternate(..))
+import Data.Semigroup.Self (Self(..))
+import Data.Semigroup.Monad (Action(..))
+import Data.Semigroup.MonadPlus (MonadSum(..))
+import Data.Semigroup.Reducer (Reducer(..))
 
 -- | Efficiently 'mapReduce' a 'Generator' using the 'Traversal' monoid. A specialized version of its namesake from "Data.Foldable"
 --

@@ -18,8 +18,11 @@ module Data.Semigroup.Apply
     , App(..)
     ) where
 
+import Control.Applicative
 import Control.Monad (void)
 import Data.Functor.Apply
+import Data.Functor.Plus
+import Data.Monoid (Monoid(..))
 import Data.Semigroup (Semigroup(..))
 import Data.Semigroup.Reducer (Reducer(..))
 
@@ -46,7 +49,7 @@ snocTrav a = (<>) a . Trav
 -- | A 'App' turns any 'Apply' wrapped around a 'Semigroup' into a 'Semigroup'
 
 newtype App f m = App { getApp :: f m } 
-  deriving (Functor,Apply)
+  deriving (Eq,Ord,Show,Read,Functor,Apply)
 
 instance (Apply f, Semigroup m) => Semigroup (App f m) where
   (<>) = liftF2 (<>)

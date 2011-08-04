@@ -162,7 +162,6 @@ instance Ord k => HasUnionWith0 (Map k) where
 
 -- | The 'Monoid' @('unionWith mappend','empty')@ for containers full of monoids.
 newtype UnionWith f m = UnionWith { getUnionWith :: f m } 
-    deriving (Eq,Ord,Show,Read,Functor,Monad)
 
 instance (HasUnionWith f, Semigroup m) => Semigroup (UnionWith f m) where
     UnionWith a <> UnionWith b = UnionWith (unionWith (<>) a b)
