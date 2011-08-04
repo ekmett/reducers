@@ -38,5 +38,10 @@ library
     Data.Semigroup.Reducer.With
     Data.Semigroup.Instances
     Data.Semigroup.Union
+    Data.Semigroup.Apply
+    Data.Semigroup.Applicative
+    Data.Semigroup.Alt
+    Data.Semigroup.Alternative
 
+--  Data.Generator.Combinators
   ghc-options: -Wall 
