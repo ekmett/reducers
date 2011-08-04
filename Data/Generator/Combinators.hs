@@ -40,7 +40,7 @@ module Data.Generator.Combinators
     , elem
     , filter
     , filterWith
-    , find
+    --, find
     , sum
     , product
     , notElem
@@ -54,10 +54,9 @@ import Control.Applicative
 import Control.Monad (MonadPlus)
 import Data.Generator
 import Data.Monoid (Monoid(..))
-import Data.Semigroup (Semigroup(..), Sum(..), Product(..), All(..), Any(..), First(..))
+import Data.Semigroup (Sum(..), Product(..), All(..), Any(..), WrappedMonoid(..))
 import Data.Semigroup.Applicative (Traversal(..))
 import Data.Semigroup.Alternative (Alternate(..))
-import Data.Semigroup.Self (Self(..))
 import Data.Semigroup.Monad (Action(..))
 import Data.Semigroup.MonadPlus (MonadSum(..))
 import Data.Semigroup.Reducer (Reducer(..))
@@ -86,7 +85,7 @@ for_ = flip traverse_
 --    'reduceWith' 'getAlt'
 -- @ 
 asum :: (Generator c, Alternative f, f a ~ Elem c) => c -> f a
-asum = reduceWith getAlt
+asum = reduceWith getAlternate
 {-# INLINE asum #-}
 
 -- | Efficiently 'mapReduce' a 'Generator' using the 'Action' monoid. A specialized version of its namesake from "Data.Foldable" and "Control.Monad"
@@ -116,13 +115,13 @@ msum :: (Generator c, MonadPlus m, m a ~ Elem c) => c -> m a
 msum = reduceWith getMonadSum
 {-# INLINE msum #-}
 
--- | Efficiently 'mapReduce' a 'Generator' using the 'Self' monoid. A specialized version of its namesake from "Data.Foldable"
+-- | Efficiently 'mapReduce' a 'Generator' using the 'WrappedMonoid' monoid. A specialized version of its namesake from "Data.Foldable"
 --
 -- @
---     'mapReduceWith' 'getSelf'
+--     'mapReduceWith' 'unwrapMonoid'
 -- @
 foldMap :: (Monoid m, Generator c) => (Elem c -> m) -> c -> m
-foldMap = mapReduceWith getSelf
+foldMap = mapReduceWith unwrapMonoid
 {-# INLINE foldMap #-}
 
 -- | Type specialization of "foldMap" above
@@ -130,13 +129,13 @@ concatMap :: Generator c => (Elem c -> [b]) -> c -> [b]
 concatMap = foldMap
 {-# INLINE concatMap #-}
 
--- | Efficiently 'reduce' a 'Generator' using the 'Self' monoid. A specialized version of its namesake from "Data.Foldable"
+-- | Efficiently 'reduce' a 'Generator' using the 'WrappedMonoid' monoid. A specialized version of its namesake from "Data.Foldable"
 --
 -- @
---     'reduceWith' 'getSelf'
+--     'reduceWith' 'unwrapMonoid'
 -- @
 fold :: (Monoid m, Generator c, Elem c ~ m) => c -> m
-fold = reduceWith getSelf
+fold = reduceWith unwrapMonoid
 {-# INLINE fold #-}
 
 -- | Convert any 'Generator' to a list of its contents. Specialization of 'reduce'
@@ -209,16 +208,18 @@ notElem x = not . elem x
 {-# INLINE notElem #-}
 
 -- | Efficiently 'mapReduce' a subset of the elements in a 'Generator'
-filter :: (Generator c, Elem c `Reducer` m) => (Elem c -> Bool) -> c -> m
+filter :: (Generator c, Reducer (Elem c) m, Monoid m) => (Elem c -> Bool) -> c -> m
 filter p = foldMap f where
     f x | p x = unit x
         | otherwise = mempty
 {-# INLINE filter #-}
 
 -- | Allows idiomatic specialization of filter by proving a function that will be used to transform the output
-filterWith :: (Generator c, Elem c `Reducer` m) => (m -> n) -> (Elem c -> Bool) -> c -> n 
+filterWith :: (Generator c, Reducer (Elem c) m, Monoid m) => (m -> n) -> (Elem c -> Bool) -> c -> n 
 filterWith f p = f . filter p
 {-# INLINE filterWith #-}
+
+{-
 
 -- | A specialization of 'filter' using the 'First' 'Monoid', analogous to 'Data.List.find'
 --
@@ -229,3 +230,4 @@ find :: Generator c => (Elem c -> Bool) -> c -> Maybe (Elem c)
 find = filterWith getFirst
 {-# INLINE find #-}
 
+-}

@@ -1,6 +1,6 @@
 name:          reducers
 category:      Data, Math, Numerical, Semigroups
-version:       0.1
+version:       0.1.0
 license:       BSD3
 cabal-version: >= 1.6
 license-file:  LICENSE
@@ -34,6 +34,7 @@ library
 
   exposed-modules:
     Data.Generator
+    Data.Generator.Combinators
     Data.Semigroup.Reducer
     Data.Semigroup.Reducer.With
     Data.Semigroup.Instances
@@ -44,6 +45,6 @@ library
     Data.Semigroup.Alternative
     Data.Semigroup.Monad
     Data.Semigroup.MonadPlus
+    Data.Semigroup.Self
 
---  Data.Generator.Combinators
   ghc-options: -Wall 

@@ -61,15 +61,15 @@ import Data.Map (Map)
 --
 -- Minimal definition: 'unit' or 'snoc'
 class Semigroup m => Reducer c m where
-    -- | Convert a value into a 'Semigroup'
-    unit :: c -> m 
-    -- | Append a value to a 'Semigroup' for use in left-to-right reduction
-    snoc :: m -> c -> m
-    -- | Prepend a value onto a 'Semigroup' for use during right-to-left reduction
-    cons :: c -> m -> m 
+  -- | Convert a value into a 'Semigroup'
+  unit :: c -> m 
+  -- | Append a value to a 'Semigroup' for use in left-to-right reduction
+  snoc :: m -> c -> m
+  -- | Prepend a value onto a 'Semigroup' for use during right-to-left reduction
+  cons :: c -> m -> m 
 
-    snoc m = (<>) m . unit
-    cons = (<>) . unit
+  snoc m = (<>) m . unit
+  cons = (<>) . unit
 
 -- | Apply a 'Reducer' to a 'Foldable' container, after mapping the contents into a suitable form for reduction.
 foldMapReduce :: (Foldable f, Monoid m, Reducer e m) => (a -> e) -> f a -> m
@@ -93,97 +93,100 @@ pureUnit :: (Applicative f, Reducer c n) => c -> f n
 pureUnit = pure . unit
 
 instance (Reducer c m, Reducer c n) => Reducer c (m,n) where
-    unit x = (unit x,unit x)
-    (m,n) `snoc` x = (m `snoc` x, n `snoc` x)
-    x `cons` (m,n) = (x `cons` m, x `cons` n)
+  unit x = (unit x,unit x)
+  (m,n) `snoc` x = (m `snoc` x, n `snoc` x)
+  x `cons` (m,n) = (x `cons` m, x `cons` n)
 
 instance (Reducer c m, Reducer c n, Reducer c o) => Reducer c (m,n,o) where
-    unit x = (unit x,unit x, unit x)
-    (m,n,o) `snoc` x = (m `snoc` x, n `snoc` x, o `snoc` x)
-    x `cons` (m,n,o) = (x `cons` m, x `cons` n, x `cons` o)
+  unit x = (unit x,unit x, unit x)
+  (m,n,o) `snoc` x = (m `snoc` x, n `snoc` x, o `snoc` x)
+  x `cons` (m,n,o) = (x `cons` m, x `cons` n, x `cons` o)
 
 instance (Reducer c m, Reducer c n, Reducer c o, Reducer c p) => Reducer c (m,n,o,p) where
-    unit x = (unit x,unit x, unit x, unit x)
-    (m,n,o,p) `snoc` x = (m `snoc` x, n `snoc` x, o `snoc` x, p `snoc` x)
-    x `cons` (m,n,o,p) = (x `cons` m, x `cons` n, x `cons` o, x `cons` p)
+  unit x = (unit x,unit x, unit x, unit x)
+  (m,n,o,p) `snoc` x = (m `snoc` x, n `snoc` x, o `snoc` x, p `snoc` x)
+  x `cons` (m,n,o,p) = (x `cons` m, x `cons` n, x `cons` o, x `cons` p)
 
 instance Reducer c [c] where
-    unit = return
-    cons = (:)
-    xs `snoc` x = xs ++ [x]
+  unit = return
+  cons = (:)
+  xs `snoc` x = xs ++ [x]
 
 instance Reducer c () where
-    unit _ = ()
-    _ `snoc` _ = ()
-    _ `cons` _ = ()
+  unit _ = ()
+  _ `snoc` _ = ()
+  _ `cons` _ = ()
 
 instance Reducer Bool Any where
-    unit = Any
+  unit = Any
 
 instance Reducer Bool All where
-    unit = All
+  unit = All
 
 instance Reducer (a -> a) (Endo a) where
-    unit = Endo
+  unit = Endo
 
 instance Semigroup a => Reducer a (Dual a) where
-    unit = Dual
+  unit = Dual
     
 instance Num a => Reducer a (Sum a) where
-    unit = Sum
+  unit = Sum
 
 instance Num a => Reducer a (Product a) where
-    unit = Product
+  unit = Product
 
 instance Ord a => Reducer a (Min a) where
-    unit = Min
+  unit = Min
 
 instance Ord a => Reducer a (Max a) where
-    unit = Max
+  unit = Max
 
 instance Reducer (Maybe a) (Monoid.First a) where
-    unit = Monoid.First
+  unit = Monoid.First
 
 instance Reducer a (Semigroup.First a) where
-    unit = Semigroup.First
+  unit = Semigroup.First
 
 instance Reducer (Maybe a) (Monoid.Last a) where
-    unit = Monoid.Last
+  unit = Monoid.Last
 
 instance Reducer a (Semigroup.Last a) where
-    unit = Semigroup.Last
+  unit = Semigroup.Last
 
 instance Measured v a => Reducer a (FingerTree v a) where
-    unit = singleton
-    cons = (<|)
-    snoc = (|>) 
+  unit = singleton
+  cons = (<|)
+  snoc = (|>) 
 
 --instance (Stream s m t, Reducer c a) => Reducer c (ParsecT s u m a) where
 --    unit = return . unit
 
 instance Reducer a (Seq a) where
-    unit = Seq.singleton
-    cons = (Seq.<|)
-    snoc = (Seq.|>)
+  unit = Seq.singleton
+  cons = (Seq.<|)
+  snoc = (Seq.|>)
 
 instance Reducer Int IntSet where
-    unit = IntSet.singleton
-    cons = IntSet.insert
-    snoc = flip IntSet.insert -- left bias irrelevant
+  unit = IntSet.singleton
+  cons = IntSet.insert
+  snoc = flip IntSet.insert -- left bias irrelevant
 
 instance Ord a => Reducer a (Set a) where
-    unit = Set.singleton
-    cons = Set.insert
-    -- pedantic about order in case 'Eq' doesn't implement structural equality
-    snoc s m | Set.member m s = s 
-             | otherwise = Set.insert m s
+  unit = Set.singleton
+  cons = Set.insert
+  -- pedantic about order in case 'Eq' doesn't implement structural equality
+  snoc s m | Set.member m s = s 
+           | otherwise = Set.insert m s
 
 instance Reducer (Int, v) (IntMap v) where
-    unit = uncurry IntMap.singleton
-    cons = uncurry IntMap.insert
-    snoc = flip . uncurry . IntMap.insertWith $ const id
+  unit = uncurry IntMap.singleton
+  cons = uncurry IntMap.insert
+  snoc = flip . uncurry . IntMap.insertWith $ const id
 
 instance Ord k => Reducer (k, v) (Map k v) where
-    unit = uncurry Map.singleton
-    cons = uncurry Map.insert
-    snoc = flip . uncurry . Map.insertWith $ const id
+  unit = uncurry Map.singleton
+  cons = uncurry Map.insert
+  snoc = flip . uncurry . Map.insertWith $ const id
+
+instance Monoid m => Reducer m (WrappedMonoid m) where
+  unit = WrapMonoid
