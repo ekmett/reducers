@@ -1,4 +1,4 @@
-{-# LANGUAGE UndecidableInstances, TypeOperators, FlexibleContexts, MultiParamTypeClasses, FlexibleInstances, TypeFamilies, CPP #-}
+{-# LANGUAGE UndecidableInstances, FlexibleContexts, MultiParamTypeClasses, FlexibleInstances, TypeFamilies, CPP #-}
 
 -----------------------------------------------------------------------------
 -- |
@@ -21,11 +21,7 @@
 module Data.Generator
   (
   -- * Generators
-    Generator
-  , Elem
-  , mapReduce
-  , mapTo
-  , mapFrom
+    Generator(..)
   -- * Generator Transformers
   , Keys(Keys, getKeys)
   , Values(Values, getValues)
@@ -60,13 +56,15 @@ import qualified Data.HashMap.Lazy as HashMap
 import Data.HashMap.Lazy (HashMap)
 import qualified Data.Map as Map
 import Data.Map (Map)
+import Data.List.NonEmpty (NonEmpty)
+import qualified Data.List.NonEmpty as NonEmpty
 import Control.Parallel.Strategies (rseq, parMap)
 import Data.Foldable (fold,foldMap)
 import Data.Semigroup.Reducer
 
 -- | minimal definition 'mapReduce' or 'mapTo'
 class Generator c where
-  type Elem c :: * 
+  type Elem c
   mapReduce :: (Reducer e m, Monoid m) => (Elem c -> e) -> c -> m
   mapTo     :: (Reducer e m, Monoid m) => (Elem c -> e) -> m -> c -> m 
   mapFrom   :: (Reducer e m, Monoid m) => (Elem c -> e) -> c -> m -> m
@@ -74,6 +72,7 @@ class Generator c where
   mapReduce f = mapTo f mempty
   mapTo f m = mappend m . mapReduce f
   mapFrom f = mappend . mapReduce f
+
 
 instance Generator Strict.ByteString where
   type Elem Strict.ByteString = Word8
@@ -90,6 +89,10 @@ instance Generator Text where
 instance Generator [c] where
   type Elem [c] = c
   mapReduce f = foldr (cons . f) mempty
+
+instance Generator (NonEmpty c) where
+  type Elem (NonEmpty c) = c
+  mapReduce f = mapReduce f . NonEmpty.toList
 
 instance Measured v e => Generator (FingerTree v e) where
   type Elem (FingerTree v e) = e
