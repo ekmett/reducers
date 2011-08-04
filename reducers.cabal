@@ -28,5 +28,7 @@ library
 
   exposed-modules:
     Data.Semigroup.Reducer
+    Data.Semigroup.Reducer.With
+    Data.Semigroup.Instances
 
   ghc-options: -Wall 
