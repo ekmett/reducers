@@ -14,12 +14,12 @@
 -----------------------------------------------------------------------------
 
 module Data.Semigroup.Reducer
-    ( Reducer
-    , unit, snoc, cons
+    ( Reducer(..)
     , foldMapReduce, foldMapReduce1
     , foldReduce, foldReduce1
     , pureUnit
     , returnUnit
+    , Count(..)
     ) where
 
 import Control.Applicative
@@ -92,6 +92,21 @@ returnUnit = return . unit
 pureUnit :: (Applicative f, Reducer c n) => c -> f n
 pureUnit = pure . unit
 
+newtype Count = Count { getCount :: Int } deriving (Eq,Ord,Show,Read)
+
+instance Semigroup Count where
+  Count a <> Count b = Count (a + b)
+  replicate1p n (Count a) = Count $ (fromIntegral n + 1) * a
+
+instance Monoid Count where
+  mempty = Count 0
+  Count a `mappend` Count b = Count (a + b)
+
+instance Reducer a Count where
+  unit _ = Count 1
+  Count n `snoc` _ = Count (n + 1)
+  _ `cons` Count n = Count (n + 1)
+  
 instance (Reducer c m, Reducer c n) => Reducer c (m,n) where
   unit x = (unit x,unit x)
   (m,n) `snoc` x = (m `snoc` x, n `snoc` x)

@@ -35,6 +35,7 @@ library
   exposed-modules:
     Data.Generator
     Data.Generator.Combinators
+    Data.Generator.LZ78
     Data.Semigroup.Generator
     Data.Semigroup.Reducer
     Data.Semigroup.Reducer.With
