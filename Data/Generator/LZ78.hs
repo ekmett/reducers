@@ -1,13 +1,12 @@
-{-# LANGUAGE TypeFamilies, MultiParamTypeClasses #-}
-
+{-# LANGUAGE TypeFamilies, BangPatterns, ParallelListComp #-} 
 -----------------------------------------------------------------------------
 -- |
--- Module      :  Data.Generator.Compressed.LZ78
--- Copyright   :  (c) Edward Kmett 2009
+-- Module      :  Data.Generator.LZ78
+-- Copyright   :  (c) Edward Kmett 2009-2011
 -- License     :  BSD-style
 -- Maintainer  :  ekmett@gmail.com
 -- Stability   :  experimental
--- Portability :  portable
+-- Portability :  non-portable (type families)
 --
 -- Compression algorithms are all about exploiting redundancy. When applying
 -- an expensive 'Reducer' to a redundant source, it may be better to 
@@ -15,28 +14,26 @@
 -- algorithm that does so, without requiring the dictionary to be populated
 -- with all of the possible values of a data type unlike its later 
 -- refinement LZW, and which has fewer comparison reqirements during encoding
--- than its earlier counterpart LZ77. Since we aren't storing these as a 
--- bitstream the LZSS refinement of only encoding pointers once you cross
--- the break-even point is a net loss. 
+-- than its earlier counterpart LZ77. 
 -----------------------------------------------------------------------------
 
-
 module Data.Generator.LZ78 
-    ( module Data.Generator
+    ( 
     -- * Lempel-Ziv 78 
-    , LZ78
+      LZ78
     -- * Encoding
-    , encode
-    , encodeEq
-    , encodeHashable
+    , encode    -- /O(n)/
+    , encodeOrd -- /O(n log n)/
+    , encodeEq  -- /O(n^2)/
     -- * Decoding (reduce)
     , decode
     -- * Recoding
-    , recode
-    , recodeEq
-    , recodeHashable
+    , recode    -- /O(n)/
+    , recodeOrd -- /O(n log n)/
+    , recodeEq  -- /O(n^2)/
     ) where
 
+import Control.Applicative
 import qualified Data.Sequence as Seq
 import Data.Sequence (Seq,(|>))
 import qualified Data.Map as Map
@@ -48,6 +45,10 @@ import Data.Generator
 import Data.Foldable
 import Data.Function (on)
 import Data.Functor
+import Data.Key as Key
+import Data.Pointed
+import Text.Read
+import Control.Comonad
 import Data.Hashable
 import Data.Monoid (Monoid(..))
 import Data.Semigroup (Semigroup(..), WrappedMonoid(..))
@@ -55,17 +56,30 @@ import Data.Semigroup.Reducer (Reducer(..), Count(..))
 
 data Token a = Token {-# UNPACK #-} !Int a deriving (Eq, Ord)
 
+instance Functor Token where
+  fmap f (Token i a) = Token i (f a)
+
+instance Foldable Token where
+  foldMap f (Token _ a) = f a
+
+instance Traversable Token where
+  traverse f (Token i a) = Token i <$> f a
+
+instance Extend Token where
+  extend f t@(Token i _) = Token i (f t)
+  duplicate t@(Token i _) = Token i t
+
+instance Comonad Token where
+  extract (Token _ a) = a
+
 instance Hashable a => Hashable (Token a) where
   hash (Token i a) = hashWithSalt i a
+
 
 -- | An LZ78 compressed 'Generator'.
 data LZ78 a 
   = Cons {-# UNPACK #-} !(Token a) (LZ78 a) 
   | Nil
---  | Fork (LZ78 a) (LZ78 a)
---  | Reset (LZ78 a)
---  | Replicate {-# UNPACK #-} !Int (LZ78 a)
-  deriving (Eq,Or)
 
 instance Show a => Show (LZ78 a) where
   showsPrec d xs = showParen (d > 10) $ 
@@ -82,7 +96,6 @@ instance (Read a, Hashable a, Eq a) => Read (LZ78 a) where
     Ident "encode" <- lexP
     encode <$> step readPrec
 
-
 instance Generator (LZ78 a) where
   type Elem (LZ78 a) = a
   mapTo = go init where
@@ -90,16 +103,17 @@ instance Generator (LZ78 a) where
     go _ _ m Nil = m
     go s f m (Cons (Token w c) ws) = m `mappend` go (s |> v) f v ws where 
       v = Seq.index s w `mappend`  unit (f c)
---    go s f m (Fork l r) = go init f (go s m f l) r
---    go _ f m (Reset ws) = go init f m ws
---    go _ _ m (Replicate 0 _)  = m
---    go s f m (Replicate n ws) = m `mappend` replicate1p (n-1) (go s f mempty ws)
 
--- follow up with recode if mapping a non-injective function
 instance Functor LZ78 where
   fmap f (Cons (Token i a) as) = Cons (Token i (f a)) (fmap f as) 
   fmap _ Nil = Nil
-  a <$ xs = Replicate (getCount (reduce xs)) (Cons 0 a Nil)
+  a <$ xs = go 0 (getCount (reduce xs)) where
+     go !_ 0 = Nil
+     go k  n | n > k = Cons (Token k a) (go (k + 1) (n - k - 1))
+             | otherwise = Cons (Token (n - 1) a) Nil
+
+instance Pointed LZ78 where
+  point a = Cons (Token 0 a) Nil
 
 instance Foldable LZ78 where
   foldMap f = unwrapMonoid . mapReduce f
@@ -149,39 +163,67 @@ recodeOrd = encodeOrd . decode
 recodeEq :: Eq a => LZ78 a -> LZ78 a 
 recodeEq = encodeEq . decode 
 
-{-
-instance Semigroup (LZ78 a) where
-  Nil <> y    = y
-  x <> Nil    = x
-  x <> y      = Fork x y
-  replicate1p n = Replicate (n + 1)
+data Entry i a = Entry i a
 
-instance Monoid (LZ78 a) where
-  mappend = (<>) 
-  mempty  = Nil
+instance Functor (Entry i) where
+  fmap f (Entry i a) = Entry i (f a)
 
--- deliberately not providing the reducer
-instance (Eq a, Hashable a) => Reducer [a] (LZ78 a) where
-  unit = encode
+instance Extend (Entry i) where
+  extend f e@(Entry i _) = Entry i (f e)
+  duplicate e@(Entry i _) = Entry i e
 
-data LZ78Reducer a where
-  Empty   :: LZ78Reducer
-  Hashed  :: (Hashable a, Eq a) => LZ78 a -> LZ78Reducer a
-  Equated :: Eq a              => LZ78 a -> LZ78Reducer a
-  Ordered :: Ord a             => LZ78 a -> LZ78Reducer a
+instance Comonad (Entry i) where
+  extract (Entry _ a) = a
 
-instance Semigroup (LZ78Reducer a) where
-  Empty <> a = a
-  a <> Empty = a
-  Hashed l <> r = encode (decode l ++ decode r)
-  Equated l <> r = encodeEq (decode l ++ decode r)
-  Ordered l <> r = encodeOrd (decode l ++ decode r)
+instance Eq i => Eq (Entry i a) where
+  Entry i _ == Entry j _ = i == j
 
--- these would make for a more reducer-like API
+instance Ord i => Ord (Entry i a) where
+  compare (Entry i _) (Entry j _) = compare i j
 
-data LZ78Builder a where
-  Empty :: LZ78Builder a
-  Hashed :: (Hashable a, Eq a) => !(HashMap (Token a) Int) -> {-# UNPACK #-} !Int -> {-# UNPACK #-} !Int -> !(Seq (Token a)) -> LZ78Builder a
-  Equated :: Eq a => [(Token a, Int)] -> {-# UNPACK #-} !Int -> {-# UNPACK #-} !Int -> !(Seq (Token a)) -> LZ78Builder a
-  Ordered :: Ord a => !(Map (Token a) Int) -> {-# UNPACK #-} !Int -> {-# UNPACK #-} !Int -> !(Seq (Token a)) -> LZ78Builder a
--}
+instance Hashable i => Hashable (Entry i a) where
+  hash (Entry i _) = hash i
+  hashWithSalt n (Entry i _) = hashWithSalt n i
+
+-- | exposes internal structure
+entries :: LZ78 a -> LZ78 (Entry Int a)
+entries = go 0 where
+  go k (Cons (Token i t) xs) = Cons (Token i (Entry k t)) $ (go $! k + 1) xs
+  go _ Nil = Nil
+
+instance Applicative LZ78 where
+  pure a = Cons (Token 0 a) Nil
+  fs <*> as = extract <$> encode 
+    [ Entry (i,j) (f a) 
+    | Entry i f <- decode (entries fs)
+    , Entry j a <- decode (entries as) 
+    ]
+  as *> bs = fmap extract $ encode $ Prelude.concat $ replicate (reduceWith getCount as)  $  decode (entries bs)
+  as <* bs = fmap extract $ encode $ Prelude.concat $ replicate (reduceWith getCount bs) <$> decode (entries as)
+
+instance Monad LZ78 where
+  return a = Cons (Token 0 a) Nil
+  (>>) = (*>)
+  as >>= k = extract <$> encode 
+    [ Entry (i,j) b 
+    | Entry i a <- decode (entries as)
+    , Entry j b <- decode (entries (k a))
+    ]
+
+type instance Key LZ78 = Int
+
+instance Lookup LZ78 where
+  lookup i xs = Key.lookup i (decode xs)
+  
+instance Indexable LZ78 where
+  index xs i = index (decode xs) i
+
+instance FoldableWithKey LZ78 where 
+  foldMapWithKey f xs = foldMapWithKey f (decode xs)
+
+instance Zip LZ78 where
+  zipWith f as bs = extract <$> encode 
+    [ Entry (i,j) (f a b)
+    | Entry i a <- decode (entries as)
+    | Entry j b <- decode (entries bs)
+    ] 
