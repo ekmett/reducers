@@ -19,7 +19,6 @@ module Data.Semigroup.Applicative
     ) where
 
 import Control.Applicative
-import Control.Monad (void)
 import Data.Monoid (Monoid(..))
 import Data.Semigroup (Semigroup(..))
 import Data.Semigroup.Reducer (Reducer(..))
@@ -37,9 +36,9 @@ instance Applicative f => Monoid (Traversal f) where
   Traversal a `mappend` Traversal b = Traversal (a *> b)
 
 instance Applicative f => Reducer (f a) (Traversal f) where
-  unit = Traversal . void
+  unit = Traversal . (() <$)
   a `cons` Traversal b = Traversal (a *> b)
-  Traversal a `snoc` b = Traversal (void (a *> b))
+  Traversal a `snoc` b = Traversal (() <$ (a *> b))
 
 -- | Efficiently avoid needlessly rebinding when using 'snoc' on an action that already returns ()
 --   A rewrite rule automatically applies this when possible

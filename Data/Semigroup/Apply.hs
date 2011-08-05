@@ -18,7 +18,7 @@ module Data.Semigroup.Apply
     , App(..)
     ) where
 
-import Control.Monad (void)
+import Data.Functor
 import Data.Functor.Apply
 import Data.Semigroup (Semigroup(..))
 import Data.Semigroup.Reducer (Reducer(..))
@@ -32,9 +32,9 @@ instance Apply f => Semigroup (Trav f) where
   Trav a <> Trav b = Trav (a .> b)
 
 instance Apply f => Reducer (f a) (Trav f) where
-    unit = Trav . void
+    unit = Trav . (() <$)
     a `cons` Trav b = Trav (a .> b)
-    Trav a `snoc` b = Trav (void (a .> b))
+    Trav a `snoc` b = Trav (() <$ (a .> b))
 
 -- | Efficiently avoid needlessly rebinding when using 'snoc' on an action that already returns ()
 --   A rewrite rule automatically applies this when possible
