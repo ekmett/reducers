@@ -1,6 +1,6 @@
 name:          reducers
 category:      Data, Math, Numerical, Semigroups
-version:       0.1.1
+version:       0.1.2
 license:       BSD3
 cabal-version: >= 1.6
 license-file:  LICENSE
@@ -16,6 +16,10 @@ build-type:    Simple
 source-repository head
   type: git
   location: git://github.com/ekmett/reducers.git
+
+flag DeriveDataTypeable
+  manual: False
+  default: True
 
 library
   build-depends: 
@@ -50,5 +54,9 @@ library
     Data.Semigroup.Monad
     Data.Semigroup.MonadPlus
     Data.Semigroup.Self
+
+  if flag(DeriveDataTypeable)
+    extensions: DeriveDataTypeable
+    cpp-options: -DLANGUAGE_DeriveDataTypeable
 
   ghc-options: -Wall 

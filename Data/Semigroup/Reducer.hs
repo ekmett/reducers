@@ -28,6 +28,7 @@ import Data.Monoid as Monoid
 import Data.Semigroup as Semigroup
 import Data.Semigroup.Foldable
 import Data.Semigroup.Instances ()
+import Data.Hashable
 import Data.Foldable
 import Data.FingerTree
 
@@ -41,6 +42,10 @@ import qualified Data.IntMap as IntMap
 import Data.IntMap (IntMap)
 import qualified Data.Map as Map
 import Data.Map (Map)
+
+#ifdef LANGUAGE_DeriveDataTypeable
+import Data.Data
+#endif
 
 --import Text.Parsec.Prim
 
@@ -92,7 +97,16 @@ returnUnit = return . unit
 pureUnit :: (Applicative f, Reducer c n) => c -> f n
 pureUnit = pure . unit
 
-newtype Count = Count { getCount :: Int } deriving (Eq,Ord,Show,Read)
+newtype Count = Count { getCount :: Int } deriving 
+  ( Eq, Ord, Show, Read
+#ifdef LANGUAGE_DeriveDataTypeable
+  , Data, Typeable
+#endif
+  )
+
+instance Hashable Count where
+  hash = hash . getCount
+  hashWithSalt n = hashWithSalt n . getCount
 
 instance Semigroup Count where
   Count a <> Count b = Count (a + b)

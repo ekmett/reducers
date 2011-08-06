@@ -19,6 +19,7 @@ import Control.Applicative
 import Data.FingerTree
 import Data.Foldable
 import Data.Traversable
+import Data.Hashable
 import Data.Monoid
 import Data.Semigroup.Reducer
 import Data.Semigroup.Foldable
@@ -31,6 +32,10 @@ import Data.Semigroup.Instances ()
 
 newtype WithReducer m c = WithReducer { withoutReducer :: c } 
   deriving (Eq, Ord, Show, Read)
+
+instance Hashable c => Hashable (WithReducer m c) where
+  hash = hash . withoutReducer
+  hashWithSalt n = hashWithSalt n . withoutReducer
 
 instance Functor (WithReducer m) where
   fmap f = WithReducer . f . withoutReducer
