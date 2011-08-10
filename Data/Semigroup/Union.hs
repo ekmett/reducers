@@ -46,14 +46,15 @@ import Data.Semigroup.Instances ()
 
 -- | A Container suitable for the 'Union' 'Monoid'
 class HasUnion f where
-  {-# SPECIALIZE union :: IntMap a -> IntMap a -> IntMap a #-}
-  {-# SPECIALIZE union :: Ord k => Map k a -> Map k a -> Map k a #-}
-  {-# SPECIALIZE union :: Eq a => [a] -> [a] -> [a] #-}
-  {-# SPECIALIZE union :: Ord a => Set a -> Set a -> Set a #-}
-  {-# SPECIALIZE union :: IntSet -> IntSet -> IntSet #-}
-  {-# SPECIALIZE union :: Eq a => HashSet a -> HashSet a -> HashSet a #-}
-  {-# SPECIALIZE union :: Eq k => HashMap k a -> HashMap k a -> HashMap k a #-}
   union :: f -> f -> f
+
+{-# SPECIALIZE union :: IntMap a -> IntMap a -> IntMap a #-}
+{-# SPECIALIZE union :: Ord k => Map k a -> Map k a -> Map k a #-}
+{-# SPECIALIZE union :: Eq a => [a] -> [a] -> [a] #-}
+{-# SPECIALIZE union :: Ord a => Set a -> Set a -> Set a #-}
+{-# SPECIALIZE union :: IntSet -> IntSet -> IntSet #-}
+{-# SPECIALIZE union :: Eq a => HashSet a -> HashSet a -> HashSet a #-}
+{-# SPECIALIZE union :: Eq k => HashMap k a -> HashMap k a -> HashMap k a #-}
 
 class HasUnion f => HasUnion0 f where
   empty :: f
@@ -132,10 +133,11 @@ instance Traversable1 Union where
 
 -- | Polymorphic containers that we can supply an operation to handle unions with
 class Functor f => HasUnionWith f where
-  {-# SPECIALIZE unionWith :: (a -> a -> a) -> IntMap a -> IntMap a -> IntMap a #-}
-  {-# SPECIALIZE unionWith :: Ord k => (a -> a -> a) -> Map k a -> Map k a -> Map k a #-}
-  {-# SPECIALIZE unionWith :: Eq k => (a -> a -> a) -> HashMap k a -> HashMap k a -> HashMap k a #-}
   unionWith :: (a -> a -> a) -> f a -> f a -> f a
+
+{-# SPECIALIZE unionWith :: (a -> a -> a) -> IntMap a -> IntMap a -> IntMap a #-}
+{-# SPECIALIZE unionWith :: Ord k => (a -> a -> a) -> Map k a -> Map k a -> Map k a #-}
+{-# SPECIALIZE unionWith :: Eq k => (a -> a -> a) -> HashMap k a -> HashMap k a -> HashMap k a #-}
 
 class HasUnionWith f => HasUnionWith0 f where
   emptyWith :: f a 
