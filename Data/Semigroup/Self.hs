@@ -23,7 +23,6 @@ module Data.Semigroup.Self
     )  where
 
 import Control.Applicative
-import Data.Monoid (Monoid(..))
 import Data.Foldable
 import Data.Traversable
 import Data.Semigroup

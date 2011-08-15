@@ -24,7 +24,7 @@ module Data.Semigroup.Reducer
 
 import Control.Applicative
 
-import Data.Monoid as Monoid
+import qualified Data.Monoid as Monoid
 import Data.Semigroup as Semigroup
 import Data.Semigroup.Foldable
 import Data.Semigroup.Instances ()
@@ -110,7 +110,7 @@ instance Hashable Count where
 
 instance Semigroup Count where
   Count a <> Count b = Count (a + b)
-  replicate1p n (Count a) = Count $ (fromIntegral n + 1) * a
+  times1p n (Count a) = Count $ (fromIntegral n + 1) * a
 
 instance Monoid Count where
   mempty = Count 0
