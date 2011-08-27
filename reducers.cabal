@@ -1,6 +1,6 @@
 name:          reducers
 category:      Data, Math, Numerical, Semigroups
-version:       0.1.5
+version:       0.1.6
 license:       BSD3
 cabal-version: >= 1.6
 license-file:  LICENSE

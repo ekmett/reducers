@@ -2,14 +2,12 @@
 module Data.Semigroup.Union
     ( module Data.Semigroup.Reducer
     -- * Unions of Containers
-    , HasUnion
-    , empty
-    , union
+    , HasUnion(..)
+    , HasUnion0(..)
     , Union(Union,getUnion)
     -- * Unions of Containers of Semigroups
-    , HasUnionWith
-    , emptyWith
-    , unionWith
+    , HasUnionWith(..)
+    , HasUnionWith0(..)
     , UnionWith(UnionWith,getUnionWith)
     ) where
 
