@@ -31,7 +31,7 @@ module Data.Semigroup.Generator
 import Data.List.NonEmpty
 import Data.Semigroup (Semigroup(..)) -- , WrappedMonoid(..))
 import Data.Semigroup.Foldable
-import Data.Semigroup.Reducer
+import Data.Semigroup.Reducer (Reducer(..))
 import Data.Generator
 
 -- | minimal definition 'mapReduce1' or 'mapTo1'
