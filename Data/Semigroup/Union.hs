@@ -62,10 +62,10 @@ instance HasUnion (IntMap a) where
 instance HasUnion0 (IntMap a) where
   empty = IntMap.empty
 
-instance Eq k => HasUnion (HashMap k a) where
+instance (Eq k, Hashable k) => HasUnion (HashMap k a) where
   union = HashMap.union
 
-instance Eq k => HasUnion0 (HashMap k a) where
+instance (Eq k, Hashable k) => HasUnion0 (HashMap k a) where
   empty = HashMap.empty
 
 instance Ord k => HasUnion (Map k a) where
