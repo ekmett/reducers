@@ -1,6 +1,6 @@
 name:          reducers
 category:      Data, Math, Numerical, Semigroups
-version:       0.1.9
+version:       0.2
 license:       BSD3
 cabal-version: >= 1.6
 license-file:  LICENSE
@@ -22,10 +22,10 @@ flag DeriveDataTypeable
   default: True
 
 library
-  build-depends: 
+  build-depends:
     base                   >= 4        && < 5,
     array                  >= 0.3      && < 0.5,
-    transformers           >= 0.2      && < 0.3,
+    transformers           >= 0.2      && < 0.4,
     bytestring             >= 0.9.1    && < 0.10,
     containers             >= 0.3      && < 0.5,
     fingertree             >= 0.0.1    && < 0.1,
@@ -33,11 +33,11 @@ library
     text                   >= 0.11.1.5 && < 0.12,
     parallel               >= 3.2      && < 3.3,
     unordered-containers   >= 0.1.4    && < 0.3,
-    semigroups             >= 0.8      && < 0.9,
-    semigroupoids          >= 1.2.6.1  && < 1.3,
-    comonad                >= 1.1.1.1  && < 1.2,
-    pointed                >= 2.0.3.1  && < 2.1,
-    keys                   >= 2.1.2    && < 2.2
+    semigroups             >= 0.8.2    && < 0.9,
+    semigroupoids          >= 1.3      && < 1.4,
+    comonad                >= 1.1.1.3  && < 1.2,
+    pointed                >= 2.1      && < 2.2,
+    keys                   >= 2.1.3    && < 2.2
 
   exposed-modules:
     Data.Generator
@@ -59,4 +59,4 @@ library
     extensions: DeriveDataTypeable
     cpp-options: -DLANGUAGE_DeriveDataTypeable
 
-  ghc-options: -Wall 
+  ghc-options: -Wall
