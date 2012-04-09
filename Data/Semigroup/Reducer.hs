@@ -15,8 +15,9 @@
 
 module Data.Semigroup.Reducer
     ( Reducer(..)
-    , foldMapReduce, foldMapReduce1
-    , foldReduce, foldReduce1
+    , mapReduce, reduce
+    , mapReduce1, reduce1
+    , mapMaybeReduce, reduceMaybes
     , pureUnit
     , returnUnit
     , Count(..)
@@ -29,7 +30,7 @@ import Data.Semigroup as Semigroup
 import Data.Semigroup.Foldable
 import Data.Semigroup.Instances ()
 import Data.Hashable
-import Data.Foldable
+import Data.Foldable as Foldable
 import Data.FingerTree
 
 import qualified Data.Sequence as Seq
@@ -61,43 +62,59 @@ import Data.Data
 -- First and Last may reduce both @a@ and 'Maybe' @a@. Since a 'Generator' has a fixed element
 -- type, the input to the reducer is generally known and extracting from the monoid usually
 -- is sufficient to fix the result type. Combinators are available for most scenarios where
--- this is not the case, and the few remaining cases can be handled by using an explicit 
+-- this is not the case, and the few remaining cases can be handled by using an explicit
 -- type annotation.
 --
 -- Minimal definition: 'unit' or 'snoc'
 class Semigroup m => Reducer c m where
   -- | Convert a value into a 'Semigroup'
-  unit :: c -> m 
+  unit :: c -> m
   -- | Append a value to a 'Semigroup' for use in left-to-right reduction
   snoc :: m -> c -> m
   -- | Prepend a value onto a 'Semigroup' for use during right-to-left reduction
-  cons :: c -> m -> m 
+  cons :: c -> m -> m
 
   snoc m = (<>) m . unit
   cons = (<>) . unit
 
--- | Apply a 'Reducer' to a 'Foldable' container, after mapping the contents into a suitable form for reduction.
-foldMapReduce :: (Foldable f, Monoid m, Reducer e m) => (a -> e) -> f a -> m
-foldMapReduce f = foldMap (unit . f)
+-- | Utility function for constructing monoids from 'Foldable's
+foldWith :: (Monoid b, Foldable t) => (a -> b -> b) -> t a -> b
+foldWith f = Foldable.foldr f mempty
 
-foldMapReduce1 :: (Foldable1 f, Reducer e m) => (a -> e) -> f a -> m
-foldMapReduce1 f = foldMap1 (unit . f)
+-- | Apply a 'Reducer' to a 'Foldable' container, after mapping the contents
+-- into a suitable form for reduction.
+mapReduce :: (Foldable f, Monoid m, Reducer e m) => (a -> e) -> f a -> m
+mapReduce f = foldWith (cons . f)
 
--- | Apply a 'Reducer' to a 'Foldable' mapping each element through 'unit'
-foldReduce :: (Foldable f, Monoid m, Reducer e m) => f e -> m
-foldReduce = foldMap unit
+-- | Apply a 'Reducer' to a 'Foldable' joining elements with 'cons'
+reduce :: (Foldable f, Monoid m, Reducer e m) => f e -> m
+reduce = foldWith cons
+
+-- | Map a function which returns 'Maybe' result onto 'Foldable' container, and
+-- produce a 'Monoid' constructed with only 'Just' results. Consider this
+-- function as a generalisation of 'Data.Maybe.mapMaybe'
+mapMaybeReduce :: (Foldable f, Monoid m, Reducer e m) => (a -> Maybe e) -> f a -> m
+mapMaybeReduce f = foldWith (maybe id cons . f)
+
+-- | Reduce a container of 'Maybe's to a monoid constructed with only 'Just'
+-- values. Consider this function as a generalisation of 'Data.Maybe.catMaybes'
+reduceMaybes :: (Foldable f, Monoid m, Reducer e m) => f (Maybe e) -> m
+reduceMaybes = mapMaybeReduce id
+
+mapReduce1 :: (Foldable1 f, Reducer e m) => (a -> e) -> f a -> m
+mapReduce1 f = foldMap1 (unit . f)
 
 -- | Apply a 'Reducer' to a 'Foldable1' mapping each element through 'unit'
-foldReduce1 :: (Foldable1 f, Reducer e m) => f e -> m
-foldReduce1 = foldMap1 unit
+reduce1 :: (Foldable1 f, Reducer e m) => f e -> m
+reduce1 = foldMap1 unit
 
-returnUnit :: (Monad m, Reducer c n) => c -> m n 
+returnUnit :: (Monad m, Reducer c n) => c -> m n
 returnUnit = return . unit
 
 pureUnit :: (Applicative f, Reducer c n) => c -> f n
 pureUnit = pure . unit
 
-newtype Count = Count { getCount :: Int } deriving 
+newtype Count = Count { getCount :: Int } deriving
   ( Eq, Ord, Show, Read
 #ifdef LANGUAGE_DeriveDataTypeable
   , Data, Typeable
@@ -120,7 +137,7 @@ instance Reducer a Count where
   unit _ = Count 1
   Count n `snoc` _ = Count (n + 1)
   _ `cons` Count n = Count (n + 1)
-  
+
 instance (Reducer c m, Reducer c n) => Reducer c (m,n) where
   unit x = (unit x,unit x)
   (m,n) `snoc` x = (m `snoc` x, n `snoc` x)
@@ -157,7 +174,7 @@ instance Reducer (a -> a) (Endo a) where
 
 instance Semigroup a => Reducer a (Dual a) where
   unit = Dual
-    
+
 instance Num a => Reducer a (Sum a) where
   unit = Sum
 
@@ -185,7 +202,7 @@ instance Reducer a (Semigroup.Last a) where
 instance Measured v a => Reducer a (FingerTree v a) where
   unit = singleton
   cons = (<|)
-  snoc = (|>) 
+  snoc = (|>)
 
 --instance (Stream s m t, Reducer c a) => Reducer c (ParsecT s u m a) where
 --    unit = return . unit
@@ -204,7 +221,7 @@ instance Ord a => Reducer a (Set a) where
   unit = Set.singleton
   cons = Set.insert
   -- pedantic about order in case 'Eq' doesn't implement structural equality
-  snoc s m | Set.member m s = s 
+  snoc s m | Set.member m s = s
            | otherwise = Set.insert m s
 
 instance Reducer (Int, v) (IntMap v) where

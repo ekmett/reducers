@@ -60,7 +60,7 @@ import Data.List.NonEmpty (NonEmpty)
 import qualified Data.List.NonEmpty as NonEmpty
 import Control.Parallel.Strategies (rseq, parMap)
 import Data.Foldable (fold,foldMap)
-import Data.Semigroup.Reducer
+import Data.Semigroup.Reducer (Reducer(..))
 
 -- | minimal definition 'mapReduce' or 'mapTo'
 class Generator c where
