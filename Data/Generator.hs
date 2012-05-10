@@ -58,7 +58,7 @@ import qualified Data.Map as Map
 import Data.Map (Map)
 import Data.List.NonEmpty (NonEmpty)
 import qualified Data.List.NonEmpty as NonEmpty
-import Control.Parallel.Strategies (rseq, parMap)
+-- import Control.Parallel.Strategies (rseq, parMap)
 import Data.Foldable (fold,foldMap)
 import Data.Semigroup.Reducer
 
@@ -80,7 +80,8 @@ instance Generator Strict.ByteString where
 
 instance Generator Lazy.ByteString where
   type Elem Lazy.ByteString = Word8
-  mapReduce f = fold . parMap rseq (mapReduce f) . Lazy.toChunks
+  -- mapReduce f = fold . parMap rseq (mapReduce f) . Lazy.toChunks
+  mapReduce f = fold . map (mapReduce f) . Lazy.toChunks
 
 instance Generator Text where
   type Elem Text = Char
@@ -170,7 +171,7 @@ instance Generator (Char8 Strict.ByteString) where
 
 instance Generator (Char8 Lazy.ByteString) where
   type Elem (Char8 Lazy.ByteString) = Char
-  mapReduce f = fold . parMap rseq (mapReduce f . Char8) . Lazy8.toChunks . getChar8
+  mapReduce f = fold . map (mapReduce f . Char8) . Lazy8.toChunks . getChar8
 
 -- | Apply a 'Reducer' directly to the elements of a 'Generator'
 reduce :: (Generator c, Reducer (Elem c) m, Monoid m) => c -> m
