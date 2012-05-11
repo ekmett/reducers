@@ -1,6 +1,6 @@
 name:          reducers
 category:      Data, Math, Numerical, Semigroups
-version:       0.3
+version:       0.3.0.1
 license:       BSD3
 cabal-version: >= 1.6
 license-file:  LICENSE
@@ -8,10 +8,12 @@ author:        Edward A. Kmett
 maintainer:    Edward A. Kmett <ekmett@gmail.com>
 stability:     provisional
 homepage:      http://github.com/ekmett/reducers/
+bug-reports:   http://github.com/ekmett/reducers/issues
 copyright:     Copyright (C) 2008-2011 Edward A. Kmett
 synopsis:      Semigroups, specialized containers and a general map/reduce framework
 description:   Semigroups, specialized containers and a general map/reduce framework
 build-type:    Simple
+extra-source-files: .travis.yml
 
 source-repository head
   type: git
