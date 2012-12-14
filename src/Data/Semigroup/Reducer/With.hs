@@ -34,7 +34,6 @@ newtype WithReducer m c = WithReducer { withoutReducer :: c }
   deriving (Eq, Ord, Show, Read)
 
 instance Hashable c => Hashable (WithReducer m c) where
-  hash = hash . withoutReducer
   hashWithSalt n = hashWithSalt n . withoutReducer
 
 instance Functor (WithReducer m) where

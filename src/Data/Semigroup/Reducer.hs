@@ -105,7 +105,6 @@ newtype Count = Count { getCount :: Int } deriving
   )
 
 instance Hashable Count where
-  hash = hash . getCount
   hashWithSalt n = hashWithSalt n . getCount
 
 instance Semigroup Count where
