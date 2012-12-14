@@ -75,6 +75,7 @@ class Semigroup m => Reducer c m where
 
   snoc m = (<>) m . unit
   cons = (<>) . unit
+  unit = snoc mempty
 
 -- | Apply a 'Reducer' to a 'Foldable' container, after mapping the contents into a suitable form for reduction.
 foldMapReduce :: (Foldable f, Monoid m, Reducer e m) => (a -> e) -> f a -> m
