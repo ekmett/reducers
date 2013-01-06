@@ -64,7 +64,7 @@ import Data.Data
 -- this is not the case, and the few remaining cases can be handled by using an explicit 
 -- type annotation.
 --
--- Minimal definition: 'unit' or 'snoc'
+-- Minimal definition: 'unit'
 class Semigroup m => Reducer c m where
   -- | Convert a value into a 'Semigroup'
   unit :: c -> m 
