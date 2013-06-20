@@ -1,4 +1,8 @@
 {-# LANGUAGE MultiParamTypeClasses, FlexibleInstances, GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE CPP #-}
+#if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 702
+{-# LANGUAGE Trustworthy #-}
+#endif
 module Data.Semigroup.Union
     ( module Data.Semigroup.Reducer
     -- * Unions of Containers

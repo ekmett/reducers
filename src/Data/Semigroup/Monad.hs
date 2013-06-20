@@ -1,4 +1,8 @@
 {-# LANGUAGE FlexibleInstances, MultiParamTypeClasses, GeneralizedNewtypeDeriving, FlexibleContexts, TypeOperators #-}
+{-# LANGUAGE CPP #-}
+#if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 702
+{-# LANGUAGE Trustworthy #-}
+#endif
 
 -----------------------------------------------------------------------------
 -- |
@@ -24,9 +28,9 @@ import Data.Semigroup (Semigroup(..))
 import Data.Semigroup.Reducer (Reducer(..))
 
 -- | A 'Action' uses an glues together monadic actions with (>>)
---   in the manner of 'mapM_' from "Data.Foldable". Any values returned by 
+--   in the manner of 'mapM_' from "Data.Foldable". Any values returned by
 --   reduced actions are discarded.
-newtype Action f = Action { getAction :: f () } 
+newtype Action f = Action { getAction :: f () }
 
 instance Monad f => Semigroup (Action f) where
   Action a <> Action b = Action (a >> b)
@@ -47,7 +51,7 @@ snocAction a = (<>) a . Action
 {-# RULES "unitAction" unit = Action #-}
 {-# RULES "snocAction" snoc = snocAction #-}
 
-newtype Mon f m = Mon { getMon :: f m } 
+newtype Mon f m = Mon { getMon :: f m }
   deriving (Monad)
 
 instance (Monad f, Semigroup m) => Semigroup (Mon f m) where

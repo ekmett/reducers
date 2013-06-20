@@ -1,4 +1,8 @@
 {-# LANGUAGE FlexibleInstances, MultiParamTypeClasses, GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE CPP #-}
+#if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 702
+{-# LANGUAGE Trustworthy #-}
+#endif
 
 -----------------------------------------------------------------------------
 -- |
@@ -10,10 +14,10 @@
 -- Portability :  portable
 --
 -- A simple 'Monoid' transformer that takes a 'Monoid' m and produces a new @m@-Reducer named 'Self' @m@
--- 
+--
 -- This is useful when you have a generator that already contains monoidal values or someone supplies
 -- the map to the monoid in the form of a function rather than as a "Reducer" instance. You can just
--- @'getSelf' . `reduce`@ or @'getSelf' . 'mapReduce' f@ in those scenarios. These behaviors are encapsulated 
+-- @'getSelf' . `reduce`@ or @'getSelf' . 'mapReduce' f@ in those scenarios. These behaviors are encapsulated
 -- into the 'fold' and 'foldMap' combinators in "Data.Monoid.Combinators" respectively.
 --
 -----------------------------------------------------------------------------
