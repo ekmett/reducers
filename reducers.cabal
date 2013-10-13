@@ -1,6 +1,6 @@
 name:          reducers
 category:      Data, Math, Numerical, Semigroups
-version:       3.0.2
+version:       3.0.2.1
 license:       BSD3
 cabal-version: >= 1.6
 license-file:  LICENSE
@@ -9,7 +9,7 @@ maintainer:    Edward A. Kmett <ekmett@gmail.com>
 stability:     provisional
 homepage:      http://github.com/ekmett/reducers/
 bug-reports:   http://github.com/ekmett/reducers/issues
-copyright:     Copyright (C) 2008-2011 Edward A. Kmett
+copyright:     Copyright (C) 2008-2013 Edward A. Kmett
 synopsis:      Semigroups, specialized containers and a general map/reduce framework
 description:   Semigroups, specialized containers and a general map/reduce framework
 build-type:    Simple
@@ -24,7 +24,7 @@ library
 
   build-depends:
     base                   >= 4        && < 5,
-    array                  >= 0.3      && < 0.5,
+    array                  >= 0.3      && < 0.6,
     transformers           >= 0.2      && < 0.4,
     bytestring             >= 0.9.1    && < 0.11,
     containers             >= 0.3      && < 0.6,
