@@ -12,7 +12,7 @@
 -- Stability   :  experimental
 -- Portability :  portable
 --
--- A 'Generator1' @c@ is a possibly-specialized container, which contains values of 
+-- A 'Generator1' @c@ is a possibly-specialized container, which contains values of
 -- type 'Elem' @c@, and which knows how to efficiently apply a 'Reducer' to extract
 -- an answer.
 --
@@ -40,7 +40,7 @@ import Data.Generator
 -- | minimal definition 'mapReduce1' or 'mapTo1'
 class Generator c => Generator1 c where
   mapReduce1 :: Reducer e m => (Elem c -> e) -> c -> m
-  mapTo1     :: Reducer e m => (Elem c -> e) -> m -> c -> m 
+  mapTo1     :: Reducer e m => (Elem c -> e) -> m -> c -> m
   mapFrom1   :: Reducer e m => (Elem c -> e) -> c -> m -> m
 
   mapTo1 f m = (<>) m . mapReduce1 f
@@ -51,13 +51,13 @@ instance Generator1 (NonEmpty e) where
 
 {-
 mapReduceDefault :: (Generator1 c, Reducer (Elem c) m, Monoid m) => (Elem c -> e) -> c -> m
-mapReduceDefault f = unwrapMonoid . mapReduce1 f 
+mapReduceDefault f = unwrapMonoid . mapReduce1 f
 
 mapToDefault :: (Generator1 c, Reducer (Elem c) m, Monoid m) => (Elem c -> e) -> m -> c -> m
-mapToDefault f = unwrapMonoid . mapTo1 f 
+mapToDefault f = unwrapMonoid . mapTo1 f
 
 mapFromDefault :: (Generator1 c, Reducer (Elem c) m, Monoid m) => (Elem c -> e) -> m -> c -> m
-mapFromDefault f = unwrapMonoid . mapFrom1 f 
+mapFromDefault f = unwrapMonoid . mapFrom1 f
 -}
 
 -- | Apply a 'Reducer' directly to the elements of a 'Generator'

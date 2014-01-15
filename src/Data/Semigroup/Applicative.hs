@@ -17,7 +17,7 @@
 --
 -----------------------------------------------------------------------------
 
-module Data.Semigroup.Applicative 
+module Data.Semigroup.Applicative
     ( Traversal(..)
     , Ap(..)
     ) where
@@ -28,9 +28,9 @@ import Data.Semigroup (Semigroup(..))
 import Data.Semigroup.Reducer (Reducer(..))
 
 -- | A 'Traversal' uses an glues together 'Applicative' actions with (*>)
---   in the manner of 'traverse_' from "Data.Foldable". Any values returned by 
+--   in the manner of 'traverse_' from "Data.Foldable". Any values returned by
 --   reduced actions are discarded.
-newtype Traversal f = Traversal { getTraversal :: f () } 
+newtype Traversal f = Traversal { getTraversal :: f () }
 
 instance Applicative f => Semigroup (Traversal f) where
   Traversal a <> Traversal b = Traversal (a *> b)
@@ -51,7 +51,7 @@ snocTraversal a = (<>) a . Traversal
 {-# RULES "unitTraversal" unit = Traversal #-}
 {-# RULES "snocTraversal" snoc = snocTraversal #-}
 
-newtype Ap f m = Ap { getApp :: f m } 
+newtype Ap f m = Ap { getApp :: f m }
   deriving (Functor,Applicative)
 
 instance (Applicative f, Semigroup m) => Semigroup (Ap f m) where

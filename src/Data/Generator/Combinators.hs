@@ -38,7 +38,7 @@ module Data.Generator.Combinators
     -- * Monoidal Reduction
     , foldMap
     , fold
-    , toList 
+    , toList
     -- * List-Like Reduction
     , concatMap
     , elem
@@ -50,7 +50,7 @@ module Data.Generator.Combinators
     , notElem
     ) where
 
-import Prelude hiding 
+import Prelude hiding
   ( mapM_, any, all, elem, filter, concatMap, and, or
   , sum, product, notElem, replicate, cycle, repeat
   )
@@ -73,7 +73,7 @@ import Data.Semigroup.Reducer (Reducer(..))
 traverse_ :: (Generator c, Applicative f) => (Elem c -> f b) -> c -> f ()
 traverse_ = mapReduceWith getTraversal
 {-# INLINE traverse_ #-}
-    
+
 -- | Convenience function as found in "Data.Foldable"
 --
 -- @
@@ -87,16 +87,16 @@ for_ = flip traverse_
 --
 -- @
 --    'reduceWith' 'getAlt'
--- @ 
+-- @
 asum :: (Generator c, Alternative f, f a ~ Elem c) => c -> f a
 asum = reduceWith getAlternate
 {-# INLINE asum #-}
 
 -- | Efficiently 'mapReduce' a 'Generator' using the 'Action' monoid. A specialized version of its namesake from "Data.Foldable" and "Control.Monad"
--- 
+--
 -- @
 --    'mapReduceWith' 'getAction'
--- @ 
+-- @
 mapM_ :: (Generator c, Monad m) => (Elem c -> m b) -> c -> m ()
 mapM_ = mapReduceWith getAction
 {-# INLINE mapM_ #-}
@@ -219,7 +219,7 @@ filter p = foldMap f where
 {-# INLINE filter #-}
 
 -- | Allows idiomatic specialization of filter by proving a function that will be used to transform the output
-filterWith :: (Generator c, Reducer (Elem c) m, Monoid m) => (m -> n) -> (Elem c -> Bool) -> c -> n 
+filterWith :: (Generator c, Reducer (Elem c) m, Monoid m) => (m -> n) -> (Elem c -> Bool) -> c -> n
 filterWith f p = f . filter p
 {-# INLINE filterWith #-}
 

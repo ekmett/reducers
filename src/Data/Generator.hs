@@ -12,7 +12,7 @@
 -- Stability   :  experimental
 -- Portability :  portable
 --
--- A 'Generator' @c@ is a possibly-specialized container, which contains values of 
+-- A 'Generator' @c@ is a possibly-specialized container, which contains values of
 -- type 'Elem' @c@, and which knows how to efficiently apply a 'Reducer' to extract
 -- an answer.
 --
@@ -37,7 +37,7 @@ module Data.Generator
 
 import Data.Monoid (Monoid, mappend, mempty)
 
-import Data.Array 
+import Data.Array
 import Data.Text (Text)
 import qualified Data.Text as Text
 import qualified Data.ByteString as Strict (ByteString, foldl')
@@ -69,7 +69,7 @@ import Data.Semigroup.Reducer
 class Generator c where
   type Elem c
   mapReduce :: (Reducer e m, Monoid m) => (Elem c -> e) -> c -> m
-  mapTo     :: (Reducer e m, Monoid m) => (Elem c -> e) -> m -> c -> m 
+  mapTo     :: (Reducer e m, Monoid m) => (Elem c -> e) -> m -> c -> m
   mapFrom   :: (Reducer e m, Monoid m) => (Elem c -> e) -> c -> m -> m
 
   mapReduce f = mapTo f mempty
@@ -123,7 +123,7 @@ instance Generator (IntMap v) where
   mapReduce f = mapReduce f . IntMap.toList
 
 instance Generator (Map k v) where
-  type Elem (Map k v) = (k,v) 
+  type Elem (Map k v) = (k,v)
   mapReduce f = mapReduce f . Map.toList
 
 instance Generator (HashMap k v) where
@@ -135,7 +135,7 @@ instance Ix i => Generator (Array i e) where
   mapReduce f = mapReduce f . assocs
 
 -- | a 'Generator' transformer that asks only for the keys of an indexed container
-newtype Keys c = Keys { getKeys :: c } 
+newtype Keys c = Keys { getKeys :: c }
 
 instance Generator (Keys (IntMap v)) where
   type Elem (Keys (IntMap v)) = Int
@@ -150,7 +150,7 @@ instance Ix i => Generator (Keys (Array i e)) where
   mapReduce f = mapReduce f . range . bounds . getKeys
 
 -- | a 'Generator' transformer that asks only for the values contained in an indexed container
-newtype Values c = Values { getValues :: c } 
+newtype Values c = Values { getValues :: c }
 
 instance Generator (Values (IntMap v)) where
   type Elem (Values (IntMap v)) = v
@@ -166,7 +166,7 @@ instance Ix i => Generator (Values (Array i e)) where
 
 -- | a 'Generator' transformer that treats 'Word8' as 'Char'
 -- This lets you use a 'ByteString' as a 'Char' source without going through a 'Monoid' transformer like 'UTF8'
-newtype Char8 c = Char8 { getChar8 :: c } 
+newtype Char8 c = Char8 { getChar8 :: c }
 
 instance Generator (Char8 Strict.ByteString) where
   type Elem (Char8 Strict.ByteString) = Char

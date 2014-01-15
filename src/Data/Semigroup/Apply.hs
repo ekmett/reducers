@@ -28,9 +28,9 @@ import Data.Semigroup (Semigroup(..))
 import Data.Semigroup.Reducer (Reducer(..))
 
 -- | A 'Trav' uses an glues together 'Applicative' actions with (*>)
---   in the manner of 'traverse_' from "Data.Foldable". Any values returned by 
+--   in the manner of 'traverse_' from "Data.Foldable". Any values returned by
 --   reduced actions are discarded.
-newtype Trav f = Trav { getTrav :: f () } 
+newtype Trav f = Trav { getTrav :: f () }
 
 instance Apply f => Semigroup (Trav f) where
   Trav a <> Trav b = Trav (a .> b)
@@ -49,7 +49,7 @@ snocTrav a = (<>) a . Trav
 
 -- | A 'App' turns any 'Apply' wrapped around a 'Semigroup' into a 'Semigroup'
 
-newtype App f m = App { getApp :: f m } 
+newtype App f m = App { getApp :: f m }
   deriving (Functor,Apply)
 
 instance (Apply f, Semigroup m) => Semigroup (App f m) where

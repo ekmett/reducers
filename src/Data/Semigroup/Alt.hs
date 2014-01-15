@@ -13,7 +13,7 @@
 -- Stability   :  experimental
 -- Portability :  non-portable (MPTCs)
 --
--- A semigroup for working 'Alt' or 'Plus' 
+-- A semigroup for working 'Alt' or 'Plus'
 --
 -----------------------------------------------------------------------------
 
@@ -28,15 +28,15 @@ import Data.Semigroup.Reducer (Reducer(..))
 
 -- | A 'Alter' turns any 'Alt' instance into a 'Semigroup'.
 
-newtype Alter f a = Alter { getAlter :: f a } 
+newtype Alter f a = Alter { getAlter :: f a }
     deriving (Functor,Alt,Plus)
 
 instance Alt f => Semigroup (Alter f a) where
-    Alter a <> Alter b = Alter (a <!> b) 
+    Alter a <> Alter b = Alter (a <!> b)
 
 instance Plus f => Monoid (Alter f a) where
     mempty = zero
-    Alter a `mappend` Alter b = Alter (a <!> b) 
+    Alter a `mappend` Alter b = Alter (a <!> b)
 
 instance Alt f => Reducer (f a) (Alter f a) where
     unit = Alter

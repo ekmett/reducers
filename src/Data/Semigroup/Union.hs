@@ -104,7 +104,7 @@ instance (Eq a, Hashable a) => HasUnion0 (HashSet a) where
 
 
 -- | The 'Monoid' @('union','empty')@
-newtype Union f = Union { getUnion :: f } 
+newtype Union f = Union { getUnion :: f }
   deriving (Eq,Ord,Show,Read)
 
 instance HasUnion f => Semigroup (Union f) where
@@ -141,30 +141,30 @@ class Functor f => HasUnionWith f where
 {-# SPECIALIZE unionWith :: Eq k => (a -> a -> a) -> HashMap k a -> HashMap k a -> HashMap k a #-}
 
 class HasUnionWith f => HasUnionWith0 f where
-  emptyWith :: f a 
+  emptyWith :: f a
 
-instance HasUnionWith IntMap where 
+instance HasUnionWith IntMap where
   unionWith = IntMap.unionWith
 
-instance HasUnionWith0 IntMap where 
+instance HasUnionWith0 IntMap where
   emptyWith = IntMap.empty
 
-instance Ord k => HasUnionWith (Map k) where 
+instance Ord k => HasUnionWith (Map k) where
   unionWith = Map.unionWith
 
-instance Ord k => HasUnionWith0 (Map k) where 
+instance Ord k => HasUnionWith0 (Map k) where
   emptyWith = Map.empty
 
 -- TODO: add unionWith to unordered-containers
 
---instance Eq k => HasUnionWith (HashMap k) where 
+--instance Eq k => HasUnionWith (HashMap k) where
 --  unionWith = HashMap.unionWith
 
---instance Ord k => HasUnionWith0 (Map k) where 
+--instance Ord k => HasUnionWith0 (Map k) where
 --  emptyWith = Map.empty
 
 -- | The 'Monoid' @('unionWith mappend','empty')@ for containers full of monoids.
-newtype UnionWith f m = UnionWith { getUnionWith :: f m } 
+newtype UnionWith f m = UnionWith { getUnionWith :: f m }
 
 instance (HasUnionWith f, Semigroup m) => Semigroup (UnionWith f m) where
     UnionWith a <> UnionWith b = UnionWith (unionWith (<>) a b)

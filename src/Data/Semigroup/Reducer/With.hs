@@ -16,8 +16,8 @@
 -----------------------------------------------------------------------------
 
 module Data.Semigroup.Reducer.With
-    ( WithReducer(..)
-    ) where
+  ( WithReducer(..)
+  ) where
 
 import Control.Applicative
 import Data.FingerTree
@@ -34,7 +34,7 @@ import Data.Semigroup.Instances ()
 --   This can be used to quickly select a "Reducer" for use as a 'FingerTree'
 --   'measure'.
 
-newtype WithReducer m c = WithReducer { withoutReducer :: c } 
+newtype WithReducer m c = WithReducer { withoutReducer :: c }
   deriving (Eq, Ord, Show, Read)
 
 instance Hashable c => Hashable (WithReducer m c) where
@@ -56,7 +56,7 @@ instance Traversable1 (WithReducer m) where
   traverse1 f (WithReducer a) = WithReducer <$> f a
 
 instance Reducer c m => Reducer (WithReducer m c) m where
-    unit = unit . withoutReducer 
+  unit = unit . withoutReducer
 
 instance (Monoid m, Reducer c m) => Measured m (WithReducer m c) where
-    measure = unit . withoutReducer
+  measure = unit . withoutReducer

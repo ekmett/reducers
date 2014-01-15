@@ -17,13 +17,13 @@
 -----------------------------------------------------------------------------
 
 module Data.Semigroup.Reducer
-    ( Reducer(..)
-    , foldMapReduce, foldMapReduce1
-    , foldReduce, foldReduce1
-    , pureUnit
-    , returnUnit
-    , Count(..)
-    ) where
+  ( Reducer(..)
+  , foldMapReduce, foldMapReduce1
+  , foldReduce, foldReduce1
+  , pureUnit
+  , returnUnit
+  , Count(..)
+  ) where
 
 import Control.Applicative
 
@@ -64,17 +64,17 @@ import Data.Data
 -- First and Last may reduce both @a@ and 'Maybe' @a@. Since a 'Generator' has a fixed element
 -- type, the input to the reducer is generally known and extracting from the monoid usually
 -- is sufficient to fix the result type. Combinators are available for most scenarios where
--- this is not the case, and the few remaining cases can be handled by using an explicit 
+-- this is not the case, and the few remaining cases can be handled by using an explicit
 -- type annotation.
 --
 -- Minimal definition: 'unit'
 class Semigroup m => Reducer c m where
   -- | Convert a value into a 'Semigroup'
-  unit :: c -> m 
+  unit :: c -> m
   -- | Append a value to a 'Semigroup' for use in left-to-right reduction
   snoc :: m -> c -> m
   -- | Prepend a value onto a 'Semigroup' for use during right-to-left reduction
-  cons :: c -> m -> m 
+  cons :: c -> m -> m
 
   snoc m = (<>) m . unit
   cons = (<>) . unit
@@ -94,13 +94,13 @@ foldReduce = foldMap unit
 foldReduce1 :: (Foldable1 f, Reducer e m) => f e -> m
 foldReduce1 = foldMap1 unit
 
-returnUnit :: (Monad m, Reducer c n) => c -> m n 
+returnUnit :: (Monad m, Reducer c n) => c -> m n
 returnUnit = return . unit
 
 pureUnit :: (Applicative f, Reducer c n) => c -> f n
 pureUnit = pure . unit
 
-newtype Count = Count { getCount :: Int } deriving 
+newtype Count = Count { getCount :: Int } deriving
   ( Eq, Ord, Show, Read
 #ifdef LANGUAGE_DeriveDataTypeable
   , Data, Typeable
@@ -122,7 +122,7 @@ instance Reducer a Count where
   unit _ = Count 1
   Count n `snoc` _ = Count (n + 1)
   _ `cons` Count n = Count (n + 1)
-  
+
 instance (Reducer c m, Reducer c n) => Reducer c (m,n) where
   unit x = (unit x,unit x)
   (m,n) `snoc` x = (m `snoc` x, n `snoc` x)
@@ -159,7 +159,7 @@ instance Reducer (a -> a) (Endo a) where
 
 instance Semigroup a => Reducer a (Dual a) where
   unit = Dual
-    
+
 instance Num a => Reducer a (Sum a) where
   unit = Sum
 
@@ -187,7 +187,7 @@ instance Reducer a (Semigroup.Last a) where
 instance Measured v a => Reducer a (FingerTree v a) where
   unit = singleton
   cons = (<|)
-  snoc = (|>) 
+  snoc = (|>)
 
 --instance (Stream s m t, Reducer c a) => Reducer c (ParsecT s u m a) where
 --    unit = return . unit
@@ -206,7 +206,7 @@ instance Ord a => Reducer a (Set a) where
   unit = Set.singleton
   cons = Set.insert
   -- pedantic about order in case 'Eq' doesn't implement structural equality
-  snoc s m | Set.member m s = s 
+  snoc s m | Set.member m s = s
            | otherwise = Set.insert m s
 
 instance Reducer (Int, v) (IntMap v) where

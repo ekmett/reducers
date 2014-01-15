@@ -35,21 +35,21 @@ cycle :: Semigroup m => m -> m
 cycle xs = xs' where xs' = xs <> xs'
 
 -- | A generalization of 'Data.List.repeat' to an arbitrary 'Semigroup'. May fail to terminate for some values in some semigroups.
-repeat :: Reducer e m => e -> m 
-repeat x = xs where xs = cons x xs 
+repeat :: Reducer e m => e -> m
+repeat x = xs where xs = cons x xs
 
--- | A generalization of 'Data.List.replicate' to an arbitrary 'Semigroup'. Adapted from 
+-- | A generalization of 'Data.List.replicate' to an arbitrary 'Semigroup'. Adapted from
 -- <http://augustss.blogspot.com/2008/07/lost-and-found-if-i-write-108-in.html>
 replicate1p :: (Semigroup m, Integral n) => m -> n -> m
-replicate1p x0 y0 
+replicate1p x0 y0
     | y0 < 0 = error "Data.Semigroup.Combinators.replicate1p: negative length"
     | otherwise = f x0 $! y0 + 1
     where
-        f x y 
+        f x y
             | even y = f (x `mappend` x) (y `quot` 2)
             | y == 1 = x
             | otherwise = g (x `mappend` x) ((y - 1) `quot` 2) x
-        g x y z 
+        g x y z
             | even y = g (x `mappend` x) (y `quot` 2) z
             | y == 1 = x `mappend` z
             | otherwise = g (x `mappend` x) ((y - 1) `quot` 2) (x `mappend` z)

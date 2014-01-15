@@ -28,16 +28,16 @@ import Data.Semigroup.Reducer (Reducer(..))
 
 -- | A 'Alternate' turns any 'Alternative' instance into a 'Monoid'.
 
-newtype Alternate f a = Alternate { getAlternate :: f a } 
+newtype Alternate f a = Alternate { getAlternate :: f a }
   deriving (Functor,Applicative,Alternative)
 
 instance Alternative f => Semigroup (Alternate f a) where
   Alternate a <> Alternate b = Alternate (a <|> b)
-   
+
 instance Alternative f => Monoid (Alternate f a) where
-  mempty = empty 
-  Alternate a `mappend` Alternate b = Alternate (a <|> b) 
+  mempty = empty
+  Alternate a `mappend` Alternate b = Alternate (a <|> b)
 
 instance Alternative f => Reducer (f a) (Alternate f a) where
-  unit = Alternate 
+  unit = Alternate
 
