@@ -3,6 +3,7 @@
 #if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 702
 {-# LANGUAGE Trustworthy #-}
 #endif
+{-# LANGUAGE StandaloneDeriving #-}
 
 -----------------------------------------------------------------------------
 -- |
@@ -21,6 +22,7 @@ module Data.Semigroup.Alt
     ( Alter(..)
     ) where
 
+import Control.Applicative (Applicative(..))
 import Data.Functor.Plus
 import Data.Monoid (Monoid(..))
 import Data.Semigroup (Semigroup(..))
@@ -29,12 +31,14 @@ import Data.Semigroup.Reducer (Reducer(..))
 -- | A 'Alter' turns any 'Alt' instance into a 'Semigroup'.
 
 newtype Alter f a = Alter { getAlter :: f a }
-    deriving (Functor,Alt,Plus)
+    deriving (Functor,Plus)
+
+deriving instance (Functor f, Applicative f, Alt f) => Alt (Alter f)
 
 instance Alt f => Semigroup (Alter f a) where
     Alter a <> Alter b = Alter (a <!> b)
 
-instance Plus f => Monoid (Alter f a) where
+instance (Applicative f, Plus f) => Monoid (Alter f a) where
     mempty = zero
     Alter a `mappend` Alter b = Alter (a <!> b)
 
