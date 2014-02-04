@@ -23,6 +23,7 @@ module Data.Semigroup.Monad
     ) where
 
 import Control.Monad (liftM, liftM2)
+import Control.Applicative (Applicative(..))
 import Data.Monoid (Monoid(..))
 import Data.Semigroup (Semigroup(..))
 import Data.Semigroup.Reducer (Reducer(..))
@@ -52,7 +53,7 @@ snocAction a = (<>) a . Action
 {-# RULES "snocAction" snoc = snocAction #-}
 
 newtype Mon f m = Mon { getMon :: f m }
-  deriving (Monad)
+  deriving (Functor,Applicative,Monad)
 
 instance (Monad f, Semigroup m) => Semigroup (Mon f m) where
   (<>) = liftM2 (<>)

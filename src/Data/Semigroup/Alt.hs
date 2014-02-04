@@ -29,7 +29,10 @@ import Data.Semigroup.Reducer (Reducer(..))
 -- | A 'Alter' turns any 'Alt' instance into a 'Semigroup'.
 
 newtype Alter f a = Alter { getAlter :: f a }
-    deriving (Functor,Alt,Plus)
+    deriving (Functor,Plus)
+
+instance Alt f => Alt (Alter f) where
+    Alter a <!> Alter b = Alter (a <!> b)
 
 instance Alt f => Semigroup (Alter f a) where
     Alter a <> Alter b = Alter (a <!> b)

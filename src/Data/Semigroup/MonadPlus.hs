@@ -22,6 +22,7 @@ module Data.Semigroup.MonadPlus
     ) where
 
 import Control.Monad (MonadPlus(..))
+import Control.Applicative (Applicative(..),Alternative(..))
 import Data.Monoid (Monoid(..))
 import Data.Semigroup (Semigroup(..))
 import Data.Semigroup.Reducer (Reducer(..))
@@ -29,7 +30,7 @@ import Data.Semigroup.Reducer (Reducer(..))
 -- | A 'MonadSum' turns any 'MonadPlus' instance into a 'Monoid'.
 
 newtype MonadSum f a = MonadSum { getMonadSum :: f a }
-  deriving (Monad,MonadPlus)
+  deriving (Functor,Applicative,Alternative,Monad,MonadPlus)
 
 instance MonadPlus f => Semigroup (MonadSum f a) where
   MonadSum a <> MonadSum b = MonadSum (mplus a b)
