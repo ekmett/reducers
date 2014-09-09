@@ -10,4 +10,7 @@ wip
 *.o
 *.hi
 *~
-*#
+*#i
+.cabal-sandbox/
+cabal.sandbox.config
+cabal.config
