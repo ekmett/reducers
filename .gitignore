@@ -11,3 +11,6 @@ wip
 *.hi
 *~
 *#
+.cabal-sandbox/
+cabal.sandbox.config
+cabal.config
