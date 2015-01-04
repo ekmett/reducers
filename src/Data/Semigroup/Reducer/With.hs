@@ -4,6 +4,9 @@
 {-# LANGUAGE Trustworthy #-}
 #endif
 
+#ifndef MIN_VERSION_base
+#define MIN_VERSION_base(x,y,z) 1
+#endif
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Data.Semigroup.Reducer.With
@@ -21,10 +24,12 @@ module Data.Semigroup.Reducer.With
 
 import Control.Applicative
 import Data.FingerTree
+#if !(MIN_VERSION_base(4,8,0))
 import Data.Foldable
 import Data.Traversable
-import Data.Hashable
 import Data.Monoid
+#endif
+import Data.Hashable
 import Data.Semigroup.Reducer
 import Data.Semigroup.Foldable
 import Data.Semigroup.Traversable

@@ -4,6 +4,9 @@
 {-# LANGUAGE Trustworthy #-}
 #endif
 
+#ifndef MIN_VERSION_base
+#define MIN_VERSION_base(x,y,z) 1
+#endif
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Data.Semigroup.Self
@@ -27,8 +30,10 @@ module Data.Semigroup.Self
     )  where
 
 import Control.Applicative
+#if !(MIN_VERSION_base(4,8,0))
 import Data.Foldable
 import Data.Traversable
+#endif
 import Data.Semigroup
 import Data.Semigroup.Foldable
 import Data.Semigroup.Traversable

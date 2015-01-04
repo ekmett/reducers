@@ -3,6 +3,10 @@
 #if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 702
 {-# LANGUAGE Trustworthy #-}
 #endif
+
+#ifndef MIN_VERSION_base
+#define MIN_VERSION_base(x,y,z) 1
+#endif
 module Data.Semigroup.Union
     ( module Data.Semigroup.Reducer
     -- * Unions of Containers
@@ -37,8 +41,10 @@ import qualified Data.List as List
 
 import Data.Hashable
 import Data.Functor
+#if !(MIN_VERSION_base(4,8,0))
 import Data.Foldable
 import Data.Traversable
+#endif
 import Data.Semigroup
 import Data.Semigroup.Foldable
 import Data.Semigroup.Traversable
