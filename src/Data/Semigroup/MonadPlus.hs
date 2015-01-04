@@ -27,7 +27,7 @@ module Data.Semigroup.MonadPlus
 import Control.Monad (MonadPlus(..))
 import Control.Applicative (Alternative(..))
 #if !(MIN_VERSION_base(4,8,0))
-import Control.Applicative (Alternative(..))
+import Control.Applicative (Applicative(..))
 import Data.Monoid (Monoid(..))
 #endif
 import Data.Semigroup (Semigroup(..))
