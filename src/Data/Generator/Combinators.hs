@@ -4,6 +4,9 @@
 {-# LANGUAGE Trustworthy #-}
 #endif
 
+#ifndef MIN_VERSION_base
+#define MIN_VERSION_base(x,y,z) 1
+#endif
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Data.Generator.Combinators
@@ -53,11 +56,16 @@ module Data.Generator.Combinators
 import Prelude hiding
   ( mapM_, any, all, elem, filter, concatMap, and, or
   , sum, product, notElem, replicate, cycle, repeat
+#if MIN_VERSION_base(4,8,0)
+  , foldMap
+#endif
   )
 import Control.Applicative
 import Control.Monad (MonadPlus)
 import Data.Generator
+#if !(MIN_VERSION_base(4,8,0))
 import Data.Monoid (Monoid(..))
+#endif
 import Data.Semigroup (Sum(..), Product(..), All(..), Any(..), WrappedMonoid(..))
 import Data.Semigroup.Applicative (Traversal(..))
 import Data.Semigroup.Alternative (Alternate(..))

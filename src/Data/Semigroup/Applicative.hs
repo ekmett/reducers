@@ -4,6 +4,9 @@
 {-# LANGUAGE Trustworthy #-}
 #endif
 
+#ifndef MIN_VERSION_base
+#define MIN_VERSION_base(x,y,z) 1
+#endif
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Data.Semigroup.Applicative
@@ -23,7 +26,9 @@ module Data.Semigroup.Applicative
     ) where
 
 import Control.Applicative
+#if !(MIN_VERSION_base(4,8,0))
 import Data.Monoid (Monoid(..))
+#endif
 import Data.Semigroup (Semigroup(..))
 import Data.Semigroup.Reducer (Reducer(..))
 

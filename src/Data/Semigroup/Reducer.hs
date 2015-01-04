@@ -3,6 +3,9 @@
 {-# LANGUAGE Trustworthy #-}
 #endif
 
+#ifndef MIN_VERSION_base
+#define MIN_VERSION_base(x,y,z) 1
+#endif
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Data.Semigroup.Reducer
@@ -25,14 +28,18 @@ module Data.Semigroup.Reducer
   , Count(..)
   ) where
 
+#if !(MIN_VERSION_base(4,8,0))
 import Control.Applicative
+#endif
 
 import qualified Data.Monoid as Monoid
 import Data.Semigroup as Semigroup
 import Data.Semigroup.Foldable
 import Data.Semigroup.Instances ()
 import Data.Hashable
+#if !(MIN_VERSION_base(4,8,0))
 import Data.Foldable
+#endif
 import Data.FingerTree
 
 import qualified Data.Sequence as Seq

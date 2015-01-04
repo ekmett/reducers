@@ -3,6 +3,9 @@
 {-# LANGUAGE Trustworthy #-}
 #endif
 
+#ifndef MIN_VERSION_base
+#define MIN_VERSION_base(x,y,z) 1
+#endif
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Data.Generator
@@ -35,7 +38,9 @@ module Data.Generator
   , reduceWith
   ) where
 
+#if !(MIN_VERSION_base(4,8,0))
 import Data.Monoid (Monoid, mappend, mempty)
+#endif
 
 import Data.Array
 import Data.Text (Text)
@@ -62,7 +67,10 @@ import Data.Map (Map)
 import Data.List.NonEmpty (NonEmpty)
 import qualified Data.List.NonEmpty as NonEmpty
 -- import Control.Parallel.Strategies (rseq, parMap)
-import Data.Foldable (fold,foldMap)
+import Data.Foldable (fold)
+#if !(MIN_VERSION_base(4,8,0))
+import Data.Foldable (foldMap)
+#endif
 import Data.Semigroup.Reducer
 
 -- | minimal definition 'mapReduce' or 'mapTo'
