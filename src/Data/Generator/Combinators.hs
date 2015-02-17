@@ -53,6 +53,7 @@ module Data.Generator.Combinators
 import Prelude hiding
   ( mapM_, any, all, elem, filter, concatMap, and, or
   , sum, product, notElem, replicate, cycle, repeat
+  , foldMap
   )
 import Control.Applicative
 import Control.Monad (MonadPlus)
