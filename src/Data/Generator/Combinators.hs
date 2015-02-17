@@ -1,6 +1,6 @@
 {-# LANGUAGE UndecidableInstances, TypeOperators, FlexibleContexts, MultiParamTypeClasses, FlexibleInstances, TypeFamilies #-}
 {-# LANGUAGE CPP #-}
-#if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 702
+#if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 702 && __GLASGOW_HASKELL__ < 710
 {-# LANGUAGE Trustworthy #-}
 #endif
 
