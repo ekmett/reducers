@@ -60,7 +60,9 @@ import Prelude hiding
 import Control.Applicative
 import Control.Monad (MonadPlus)
 import Data.Generator
+#if __GLASGOW_HASKELL__ < 710
 import Data.Monoid (Monoid(..))
+#endif
 import Data.Semigroup (Sum(..), Product(..), All(..), Any(..), WrappedMonoid(..))
 import Data.Semigroup.Applicative (Traversal(..))
 import Data.Semigroup.Alternative (Alternate(..))

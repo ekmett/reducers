@@ -1,6 +1,6 @@
 {-# LANGUAGE FlexibleInstances, MultiParamTypeClasses, GeneralizedNewtypeDeriving, FlexibleContexts, TypeOperators #-}
 {-# LANGUAGE CPP #-}
-#if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 702
+#if __GLASGOW_HASKELL__ >= 702
 {-# LANGUAGE Trustworthy #-}
 #endif
 
@@ -22,8 +22,12 @@ module Data.Semigroup.MonadPlus
     ) where
 
 import Control.Monad (MonadPlus(..))
+#if __GLASGOW_HASKELL__ < 710
 import Control.Applicative (Applicative(..),Alternative(..))
 import Data.Monoid (Monoid(..))
+#else
+import Control.Applicative (Alternative(..))
+#endif
 import Data.Semigroup (Semigroup(..))
 import Data.Semigroup.Reducer (Reducer(..))
 

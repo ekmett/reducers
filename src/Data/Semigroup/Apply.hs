@@ -1,6 +1,6 @@
 {-# LANGUAGE FlexibleInstances, MultiParamTypeClasses, GeneralizedNewtypeDeriving, FlexibleContexts #-}
 {-# LANGUAGE CPP #-}
-#if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 702
+#if __GLASGOW_HASKELL__ >= 702
 {-# LANGUAGE Trustworthy #-}
 #endif
 
@@ -22,7 +22,9 @@ module Data.Semigroup.Apply
     , App(..)
     ) where
 
+#if __GLASGOW_HASKELL__ < 710
 import Data.Functor
+#endif
 import Data.Functor.Apply
 import Data.Semigroup (Semigroup(..))
 import Data.Semigroup.Reducer (Reducer(..))

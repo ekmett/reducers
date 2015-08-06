@@ -1,3 +1,9 @@
+3.11
+----
+* Fixed the name of the field accessor for Ap
+* `semigroupoids` 5 support
+* Builds without warnings on GHC 7.10
+
 3.10
 ----
 * Updated dependencies

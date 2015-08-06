@@ -1,6 +1,6 @@
 {-# LANGUAGE MultiParamTypeClasses, FlexibleInstances, GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE CPP #-}
-#if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 702
+#if __GLASGOW_HASKELL__ >= 702
 {-# LANGUAGE Trustworthy #-}
 #endif
 module Data.Semigroup.Union
@@ -36,9 +36,11 @@ import Data.Set (Set)
 import qualified Data.List as List
 
 import Data.Hashable
+#if __GLASGOW_HASKELL__ < 710
 import Data.Functor
 import Data.Foldable
 import Data.Traversable
+#endif
 import Data.Semigroup
 import Data.Semigroup.Foldable
 import Data.Semigroup.Traversable

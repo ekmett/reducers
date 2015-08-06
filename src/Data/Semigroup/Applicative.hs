@@ -1,6 +1,6 @@
 {-# LANGUAGE FlexibleInstances, MultiParamTypeClasses, GeneralizedNewtypeDeriving, FlexibleContexts, TypeOperators #-}
 {-# LANGUAGE CPP #-}
-#if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 702
+#if __GLASGOW_HASKELL__ >= 702
 {-# LANGUAGE Trustworthy #-}
 #endif
 
@@ -23,7 +23,9 @@ module Data.Semigroup.Applicative
     ) where
 
 import Control.Applicative
+#if __GLASGOW_HASKELL__ < 710
 import Data.Monoid (Monoid(..))
+#endif
 import Data.Semigroup (Semigroup(..))
 import Data.Semigroup.Reducer (Reducer(..))
 
@@ -51,7 +53,7 @@ snocTraversal a = (<>) a . Traversal
 {-# RULES "unitTraversal" unit = Traversal #-}
 {-# RULES "snocTraversal" snoc = snocTraversal #-}
 
-newtype Ap f m = Ap { getApp :: f m }
+newtype Ap f m = Ap { getAp :: f m }
   deriving (Functor,Applicative)
 
 instance (Applicative f, Semigroup m) => Semigroup (Ap f m) where

@@ -35,7 +35,9 @@ module Data.Generator
   , reduceWith
   ) where
 
+#if __GLASGOW_HASKELL__ < 710
 import Data.Monoid (Monoid, mappend, mempty)
+#endif
 
 import Data.Array
 import Data.Text (Text)
@@ -62,7 +64,11 @@ import Data.Map (Map)
 import Data.List.NonEmpty (NonEmpty)
 import qualified Data.List.NonEmpty as NonEmpty
 -- import Control.Parallel.Strategies (rseq, parMap)
+#if __GLASGOW_HASKELL__ < 710
 import Data.Foldable (fold,foldMap)
+#else
+import Data.Foldable (fold)
+#endif
 import Data.Semigroup.Reducer
 
 -- | minimal definition 'mapReduce' or 'mapTo'

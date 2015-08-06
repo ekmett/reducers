@@ -1,5 +1,5 @@
 {-# LANGUAGE UndecidableInstances , FlexibleContexts , MultiParamTypeClasses , FlexibleInstances , GeneralizedNewtypeDeriving, TypeOperators, ScopedTypeVariables, CPP #-}
-#if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 702
+#if __GLASGOW_HASKELL__ >= 702
 {-# LANGUAGE Trustworthy #-}
 #endif
 
@@ -25,14 +25,20 @@ module Data.Semigroup.Reducer
   , Count(..)
   ) where
 
+#if __GLASGOW_HASKELL__ < 710
 import Control.Applicative
+#endif
 
 import qualified Data.Monoid as Monoid
 import Data.Semigroup as Semigroup
 import Data.Semigroup.Foldable
 import Data.Semigroup.Instances ()
 import Data.Hashable
+
+#if __GLASGOW_HASKELL__ < 710
 import Data.Foldable
+#endif
+
 import Data.FingerTree
 
 import qualified Data.Sequence as Seq

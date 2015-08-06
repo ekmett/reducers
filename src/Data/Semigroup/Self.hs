@@ -1,6 +1,6 @@
 {-# LANGUAGE FlexibleInstances, MultiParamTypeClasses, GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE CPP #-}
-#if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 702
+#if __GLASGOW_HASKELL__ >= 702
 {-# LANGUAGE Trustworthy #-}
 #endif
 
@@ -26,9 +26,11 @@ module Data.Semigroup.Self
     ( Self(..)
     )  where
 
+#if __GLASGOW_HASKELL__ < 710
 import Control.Applicative
 import Data.Foldable
 import Data.Traversable
+#endif
 import Data.Semigroup
 import Data.Semigroup.Foldable
 import Data.Semigroup.Traversable

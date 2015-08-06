@@ -22,7 +22,9 @@ module Data.Semigroup.Alternative
     ) where
 
 import Control.Applicative
+#if __GLASGOW_HASKELL__ < 710
 import Data.Monoid (Monoid(..))
+#endif
 import Data.Semigroup (Semigroup(..))
 import Data.Semigroup.Reducer (Reducer(..))
 
