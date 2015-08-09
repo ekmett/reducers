@@ -1,7 +1,7 @@
 reducers
 ========
 
-[![Build Status](https://secure.travis-ci.org/ekmett/reducers.png?branch=master)](http://travis-ci.org/ekmett/reducers)
+[![Hackage](https://img.shields.io/hackage/v/reducers.svg)](https://hackage.haskell.org/package/reducers) [![Build Status](https://secure.travis-ci.org/ekmett/reducers.png?branch=master)](http://travis-ci.org/ekmett/reducers
 
 This package provides a number of semigroup-based containers and reductions.
 
