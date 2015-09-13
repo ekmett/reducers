@@ -118,7 +118,7 @@ instance Hashable Count where
 
 instance Semigroup Count where
   Count a <> Count b = Count (a + b)
-  times1p n (Count a) = Count $ (fromIntegral n + 1) * a
+  stimes n (Count a) = Count $ fromIntegral n * a
 
 instance Monoid Count where
   mempty = Count 0
