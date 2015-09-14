@@ -3,6 +3,10 @@
 {-# LANGUAGE Trustworthy #-}
 #endif
 
+#ifndef MIN_VERSION_semigroups
+#define MIN_VERSION_semigroups(x,y,z) 1
+#endif
+
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Data.Semigroup.Reducer
@@ -118,7 +122,11 @@ instance Hashable Count where
 
 instance Semigroup Count where
   Count a <> Count b = Count (a + b)
+#if MIN_VERSION_semigroups(0,17,0)
   stimes n (Count a) = Count $ fromIntegral n * a
+#else
+  times1p n (Count a) = Count $ (fromIntegral n + 1) * a
+#endif
 
 instance Monoid Count where
   mempty = Count 0

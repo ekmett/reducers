@@ -1,3 +1,11 @@
+3.12.1
+----
+* Restored support for `semigroups` < 0.17.
+
+3.12
+----
+* `semigroups` 0.17 support
+
 3.11
 ----
 * Fixed the name of the field accessor for Ap
