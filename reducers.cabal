@@ -1,6 +1,6 @@
 name:          reducers
 category:      Data, Math, Numerical, Semigroups
-version:       3.12.1
+version:       3.12.2
 license:       BSD3
 cabal-version: >= 1.6
 license-file:  LICENSE
@@ -9,7 +9,7 @@ maintainer:    Edward A. Kmett <ekmett@gmail.com>
 stability:     provisional
 homepage:      http://github.com/ekmett/reducers/
 bug-reports:   http://github.com/ekmett/reducers/issues
-copyright:     Copyright (C) 2008-2013 Edward A. Kmett
+copyright:     Copyright (C) 2008-2016 Edward A. Kmett
 synopsis:      Semigroups, specialized containers and a general map/reduce framework
 description:   Semigroups, specialized containers and a general map/reduce framework
 build-type:    Simple
@@ -25,7 +25,7 @@ library
   build-depends:
     base                   >= 4        && < 5,
     array                  >= 0.3      && < 0.6,
-    transformers           >= 0.2      && < 0.5,
+    transformers           >= 0.2      && < 0.6,
     bytestring             >= 0.9.1    && < 0.11,
     containers             >= 0.3      && < 0.6,
     fingertree             >= 0.1      && < 0.2,
@@ -56,3 +56,8 @@ library
     cpp-options: -DLANGUAGE_DeriveDataTypeable
 
   ghc-options: -Wall
+
+  -- hack around the buggy unused matches check for class associated types in ghc 8 rc1
+  if impl(ghc >= 8)
+    ghc-options: -fno-warn-unused-matches
+

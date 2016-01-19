@@ -1,12 +1,13 @@
 {-# LANGUAGE UndecidableInstances, FlexibleContexts, MultiParamTypeClasses, FlexibleInstances, TypeFamilies, CPP #-}
-#if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 702
-{-# LANGUAGE Trustworthy #-}
+
+#ifndef MIN_VERSION_base
+#define MIN_VERSION_base(x,y,z) 1
 #endif
 
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Data.Generator
--- Copyright   :  (c) Edward Kmett 2009
+-- Copyright   :  (c) Edward Kmett 2009-2016
 -- License     :  BSD-style
 -- Maintainer  :  ekmett@gmail.com
 -- Stability   :  experimental
@@ -47,7 +48,7 @@ import qualified Data.ByteString.Char8 as Strict8 (foldl')
 import qualified Data.ByteString.Lazy as Lazy (ByteString, toChunks)
 import qualified Data.ByteString.Lazy.Char8 as Lazy8 (toChunks)
 import Data.Word (Word8)
-import Data.FingerTree (Measured, FingerTree)
+import Data.FingerTree (FingerTree)
 import Data.Sequence (Seq)
 import qualified Data.Set as Set
 import Data.Set (Set)
@@ -104,7 +105,7 @@ instance Generator (NonEmpty c) where
   type Elem (NonEmpty c) = c
   mapReduce f = mapReduce f . NonEmpty.toList
 
-instance Measured v e => Generator (FingerTree v e) where
+instance Generator (FingerTree v e) where
   type Elem (FingerTree v e) = e
   mapReduce f = foldMap (unit . f)
 
@@ -166,7 +167,11 @@ instance Generator (Values (Map k v)) where
   type Elem (Values (Map k v)) = v
   mapReduce f = mapReduce f . Map.elems . getValues
 
+#if MIN_VERSION_base(4,9,0)
+instance Generator (Values (Array i e)) where
+#else
 instance Ix i => Generator (Values (Array i e)) where
+#endif
   type Elem (Values (Array i e)) = e
   mapReduce f = mapReduce f . elems . getValues
 

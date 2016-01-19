@@ -1,3 +1,9 @@
+3.12.2
+------
+* Removed a couple of redundant instance constraints
+* GHC 8 compatibility
+* `transformers` 0.5 compatibility
+
 3.12.1
 ----
 * Restored support for `semigroups` < 0.17.
