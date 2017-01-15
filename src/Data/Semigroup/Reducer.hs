@@ -55,6 +55,8 @@ import qualified Data.IntMap as IntMap
 import Data.IntMap (IntMap)
 import qualified Data.Map as Map
 import Data.Map (Map)
+import qualified Data.HashMap.Lazy as HashMap
+import Data.HashMap.Lazy (HashMap)
 
 #ifdef LANGUAGE_DeriveDataTypeable
 import Data.Data
@@ -232,6 +234,12 @@ instance Ord k => Reducer (k, v) (Map k v) where
   unit = uncurry Map.singleton
   cons = uncurry Map.insert
   snoc = flip . uncurry . Map.insertWith $ const id
+
+
+instance (Eq k, Hashable k) => Reducer (k, v) (HashMap k v) where
+  unit = uncurry HashMap.singleton
+  cons = uncurry HashMap.insert
+  snoc = flip . uncurry . HashMap.insertWith $ const id
 
 instance Monoid m => Reducer m (WrappedMonoid m) where
   unit = WrapMonoid

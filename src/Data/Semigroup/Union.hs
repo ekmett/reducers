@@ -157,13 +157,11 @@ instance Ord k => HasUnionWith (Map k) where
 instance Ord k => HasUnionWith0 (Map k) where
   emptyWith = Map.empty
 
--- TODO: add unionWith to unordered-containers
+instance (Eq k, Hashable k) => HasUnionWith (HashMap k) where
+  unionWith = HashMap.unionWith
 
---instance Eq k => HasUnionWith (HashMap k) where
---  unionWith = HashMap.unionWith
-
---instance Ord k => HasUnionWith0 (Map k) where
---  emptyWith = Map.empty
+instance (Eq k, Hashable k) => HasUnionWith0 (HashMap k) where
+  emptyWith = HashMap.empty
 
 -- | The 'Monoid' @('unionWith mappend','empty')@ for containers full of monoids.
 newtype UnionWith f m = UnionWith { getUnionWith :: f m }
