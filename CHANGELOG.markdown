@@ -1,3 +1,10 @@
+next
+----
+* Fix the build with `fingertree-0.1.2` or later. Since `fingertree-0.1.2` now
+  provides a `Semigroup` instance for `FingerTree`, as a result
+  `Data.Semigroup.Instances` no longer exports anything if building against
+  `fingertree-0.1.2` or later with `base-4.9` or later.
+
 3.12.2
 ------
 * Removed a couple of redundant instance constraints
