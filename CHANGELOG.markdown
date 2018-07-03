@@ -1,3 +1,8 @@
+next [????.??.??]
+-----------------
+* Fix some `RULES` warnings.
+* Allow building with `containers-0.6`.
+
 3.12.2
 ------
 * Fix the build with `fingertree-0.1.2` or later. Since `fingertree-0.1.2` now
