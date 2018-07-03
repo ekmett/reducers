@@ -1,5 +1,5 @@
-next [????.??.??]
------------------
+3.12.3 [2018.07.03]
+-------------------
 * Fix some `RULES` warnings.
 * Allow building with `containers-0.6`.
 
