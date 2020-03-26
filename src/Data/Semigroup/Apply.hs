@@ -23,12 +23,12 @@ module Data.Semigroup.Apply
     , App(..)
     ) where
 
-#if __GLASGOW_HASKELL__ < 710
-import Data.Functor
-#endif
 import Data.Functor.Apply
-import Data.Semigroup (Semigroup(..))
 import Data.Semigroup.Reducer (Reducer(..))
+
+#if !(MIN_VERSION_base(4,11,0))
+import Data.Semigroup (Semigroup(..))
+#endif
 
 -- | A 'Trav' uses an glues together 'Applicative' actions with (*>)
 --   in the manner of 'traverse_' from "Data.Foldable". Any values returned by

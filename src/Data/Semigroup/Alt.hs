@@ -22,11 +22,15 @@ module Data.Semigroup.Alt
     ) where
 
 import Data.Functor.Plus
-#if __GLASGOW_HASKELL__ < 710
+import Data.Semigroup.Reducer (Reducer(..))
+
+#if !(MIN_VERSION_base(4,8,0))
 import Data.Monoid (Monoid(..))
 #endif
+
+#if !(MIN_VERSION_base(4,11,0))
 import Data.Semigroup (Semigroup(..))
-import Data.Semigroup.Reducer (Reducer(..))
+#endif
 
 -- | A 'Alter' turns any 'Alt' instance into a 'Semigroup'.
 

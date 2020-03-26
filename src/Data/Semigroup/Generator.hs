@@ -29,13 +29,19 @@ module Data.Semigroup.Generator
   , reduceWith1
   ) where
 
--- import Data.Monoid (Monoid(..))
--- import Data.Foldable (fold,foldMap)
 import Data.List.NonEmpty
-import Data.Semigroup (Semigroup(..)) -- , WrappedMonoid(..))
 import Data.Semigroup.Foldable
 import Data.Semigroup.Reducer
 import Data.Generator
+
+-- #if !(MIN_VERSION_base(4,8,0))
+-- import Data.Monoid (Monoid(..))
+-- import Data.Foldable (fold,foldMap)
+-- #endif
+
+#if !(MIN_VERSION_base(4,11,0))
+import Data.Semigroup (Semigroup(..)) -- , WrappedMonoid(..))
+#endif
 
 -- | minimal definition 'mapReduce1' or 'mapTo1'
 class Generator c => Generator1 c where

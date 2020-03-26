@@ -21,15 +21,18 @@ module Data.Semigroup.MonadPlus
     ( MonadSum(..)
     ) where
 
-import Control.Monad (MonadPlus(..))
-#if __GLASGOW_HASKELL__ < 710
-import Control.Applicative (Applicative(..),Alternative(..))
-import Data.Monoid (Monoid(..))
-#else
 import Control.Applicative (Alternative(..))
-#endif
-import Data.Semigroup (Semigroup(..))
+import Control.Monad (MonadPlus(..))
 import Data.Semigroup.Reducer (Reducer(..))
+
+#if !(MIN_VERSION_base(4,8,0))
+import Control.Applicative (Applicative(..))
+import Data.Monoid (Monoid(..))
+#endif
+
+#if !(MIN_VERSION_base(4,11,0))
+import Data.Semigroup (Semigroup(..))
+#endif
 
 -- | A 'MonadSum' turns any 'MonadPlus' instance into a 'Monoid'.
 

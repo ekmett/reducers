@@ -24,12 +24,16 @@ module Data.Semigroup.Monad
     ) where
 
 import Control.Monad (liftM, liftM2)
-#if __GLASGOW_HASKELL__ < 710
+import Data.Semigroup.Reducer (Reducer(..))
+
+#if !(MIN_VERSION_base(4,8,0))
 import Control.Applicative (Applicative(..))
 import Data.Monoid (Monoid(..))
 #endif
+
+#if !(MIN_VERSION_base(4,11,0))
 import Data.Semigroup (Semigroup(..))
-import Data.Semigroup.Reducer (Reducer(..))
+#endif
 
 -- | A 'Action' uses an glues together monadic actions with (>>)
 --   in the manner of 'mapM_' from "Data.Foldable". Any values returned by
