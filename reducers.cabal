@@ -2,7 +2,7 @@ name:          reducers
 category:      Data, Math, Numerical, Semigroups
 version:       3.12.3
 license:       BSD3
-cabal-version: >= 1.6
+cabal-version: >= 1.10
 license-file:  LICENSE
 author:        Edward A. Kmett
 maintainer:    Edward A. Kmett <ekmett@gmail.com>
@@ -64,10 +64,11 @@ library
     Data.Semigroup.Self
 
   if impl(ghc)
-    extensions: DeriveDataTypeable
+    default-extensions: DeriveDataTypeable
     cpp-options: -DLANGUAGE_DeriveDataTypeable
 
   ghc-options: -Wall
+  default-language: Haskell2010
 
   -- hack around the buggy unused matches check for class associated types in ghc 8 rc1
   if impl(ghc >= 8)
