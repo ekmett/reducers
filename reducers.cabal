@@ -13,7 +13,7 @@ copyright:     Copyright (C) 2008-2016 Edward A. Kmett
 synopsis:      Semigroups, specialized containers and a general map/reduce framework
 description:   Semigroups, specialized containers and a general map/reduce framework.
 build-type:    Simple
-extra-source-files: .travis.yml
+extra-source-files: CHANGELOG.markdown README.markdown
 tested-with:   GHC == 7.0.4
              , GHC == 7.2.2
              , GHC == 7.4.2
