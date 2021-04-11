@@ -60,15 +60,17 @@ import Prelude hiding
 import Control.Applicative (Alternative)
 import Control.Monad (MonadPlus)
 import Data.Generator
-#if __GLASGOW_HASKELL__ < 710
-import Data.Monoid (Monoid(..))
-#endif
 import Data.Semigroup (Sum(..), Product(..), All(..), Any(..), WrappedMonoid(..))
 import Data.Semigroup.Applicative (Traversal(..))
 import Data.Semigroup.Alternative (Alternate(..))
 import Data.Semigroup.Monad (Action(..))
 import Data.Semigroup.MonadPlus (MonadSum(..))
 import Data.Semigroup.Reducer (Reducer(..))
+
+#if !(MIN_VERSION_base(4,8,0))
+import Control.Applicative (Applicative)
+import Data.Monoid (Monoid(..))
+#endif
 
 -- | Efficiently 'mapReduce' a 'Generator' using the 'Traversal' monoid. A specialized version of its namesake from "Data.Foldable"
 --
