@@ -132,7 +132,9 @@ instance Semigroup Count where
 
 instance Monoid Count where
   mempty = Count 0
+#if !(MIN_VERSION_base(4,11,0))
   Count a `mappend` Count b = Count (a + b)
+#endif
 
 instance Reducer a Count where
   unit _ = Count 1

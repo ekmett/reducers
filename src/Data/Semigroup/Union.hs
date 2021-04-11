@@ -115,7 +115,9 @@ instance HasUnion f => Semigroup (Union f) where
   Union a <> Union b = Union (a `union` b)
 
 instance HasUnion0 f => Monoid (Union f) where
+#if !(MIN_VERSION_base(4,11,0))
   Union a `mappend` Union b = Union (a `union` b)
+#endif
   mempty = Union empty
 
 instance HasUnion f => Reducer f (Union f) where
@@ -173,7 +175,9 @@ instance (HasUnionWith f, Semigroup m) => Semigroup (UnionWith f m) where
 
 instance (HasUnionWith0 f, Monoid m) => Monoid (UnionWith f m) where
     mempty = UnionWith emptyWith
+#if !(MIN_VERSION_base(4,11,0))
     UnionWith a `mappend` UnionWith b = UnionWith (unionWith mappend a b)
+#endif
 
 instance (HasUnionWith f, Semigroup m, Monoid m) => Reducer (f m) (UnionWith f m) where
     unit = UnionWith

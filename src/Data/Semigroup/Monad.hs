@@ -45,7 +45,9 @@ instance Monad f => Semigroup (Action f) where
 
 instance Monad f => Monoid (Action f) where
   mempty = Action (return ())
+#if !(MIN_VERSION_base(4,11,0))
   Action a `mappend` Action b = Action (a >> b)
+#endif
 
 instance Monad f => Reducer (f a) (Action f) where
   unit a            = Action (a >> return ())
@@ -67,7 +69,9 @@ instance (Monad f, Semigroup m) => Semigroup (Mon f m) where
 
 instance (Monad f, Monoid m) => Monoid (Mon f m) where
   mempty = return mempty
+#if !(MIN_VERSION_base(4,11,0))
   mappend = liftM2 mappend
+#endif
 
 instance (Monad f, Reducer c m) => Reducer (f c) (Mon f m) where
   unit = liftM unit . Mon

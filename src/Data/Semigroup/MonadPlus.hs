@@ -44,7 +44,9 @@ instance MonadPlus f => Semigroup (MonadSum f a) where
 
 instance MonadPlus f => Monoid (MonadSum f a) where
   mempty = mzero
+#if !(MIN_VERSION_base(4,11,0))
   MonadSum a `mappend` MonadSum b = MonadSum (mplus a b)
+#endif
 
 instance MonadPlus f => Reducer (f a) (MonadSum f a) where
   unit = MonadSum

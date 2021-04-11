@@ -45,7 +45,9 @@ instance Alt f => Semigroup (Alter f a) where
 
 instance Plus f => Monoid (Alter f a) where
     mempty = zero
+#if !(MIN_VERSION_base(4,11,0))
     Alter a `mappend` Alter b = Alter (a <!> b)
+#endif
 
 instance Alt f => Reducer (f a) (Alter f a) where
     unit = Alter

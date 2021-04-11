@@ -42,7 +42,9 @@ instance Alternative f => Semigroup (Alternate f a) where
 
 instance Alternative f => Monoid (Alternate f a) where
   mempty = empty
+#if !(MIN_VERSION_base(4,11,0))
   Alternate a `mappend` Alternate b = Alternate (a <|> b)
+#endif
 
 instance Alternative f => Reducer (f a) (Alternate f a) where
   unit = Alternate

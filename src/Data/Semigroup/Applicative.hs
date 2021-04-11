@@ -44,7 +44,9 @@ instance Applicative f => Semigroup (Traversal f) where
 
 instance Applicative f => Monoid (Traversal f) where
   mempty = Traversal (pure ())
+#if !(MIN_VERSION_base(4,11,0))
   Traversal a `mappend` Traversal b = Traversal (a *> b)
+#endif
 
 instance Applicative f => Reducer (f a) (Traversal f) where
   unit = Traversal . (() <$)
@@ -66,7 +68,9 @@ instance (Applicative f, Semigroup m) => Semigroup (Ap f m) where
 
 instance (Applicative f, Monoid m) => Monoid (Ap f m) where
   mempty = pure mempty
+#if !(MIN_VERSION_base(4,11,0))
   mappend = liftA2 mappend
+#endif
 
 instance (Applicative f, Reducer c m) => Reducer (f c) (Ap f m) where
   unit = fmap unit . Ap
