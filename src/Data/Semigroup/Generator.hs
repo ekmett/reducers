@@ -29,7 +29,7 @@ module Data.Semigroup.Generator
   , reduceWith1
   ) where
 
-import Data.List.NonEmpty
+import Data.List.NonEmpty (NonEmpty)
 import Data.Semigroup.Foldable
 import Data.Semigroup.Reducer
 import Data.Generator
