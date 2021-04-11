@@ -1,3 +1,7 @@
+next [????.??.??]
+-----------------
+* Allow building with recent GHCs.
+
 3.12.3 [2018.07.03]
 -------------------
 * Fix some `RULES` warnings.

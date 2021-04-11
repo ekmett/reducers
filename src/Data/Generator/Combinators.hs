@@ -57,7 +57,7 @@ import Prelude hiding
   , foldMap
 #endif
   )
-import Control.Applicative
+import Control.Applicative (Alternative)
 import Control.Monad (MonadPlus)
 import Data.Generator
 #if __GLASGOW_HASKELL__ < 710
