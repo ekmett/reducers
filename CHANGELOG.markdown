@@ -1,6 +1,7 @@
 next [????.??.??]
 -----------------
-* Allow building with recent GHCs.
+* Allow building with GHC 9.2.
+* Allow building with `transformers-0.6.*`.
 
 3.12.3 [2018.07.03]
 -------------------
