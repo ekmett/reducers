@@ -23,7 +23,9 @@ module Data.Semigroup.Applicative
     , Ap(..)
     ) where
 
+#if !(MIN_VERSION_base(4,18,0))
 import Control.Applicative
+#endif
 import Data.Semigroup.Reducer (Reducer(..))
 
 #if !(MIN_VERSION_base(4,8,0))
