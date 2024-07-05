@@ -45,7 +45,7 @@ library
     bytestring             >= 0.9.1    && < 0.13,
     containers             >= 0.3      && < 0.8,
     fingertree             >= 0.1      && < 0.2,
-    hashable               >= 1.1.2.1  && < 1.5,
+    hashable               >= 1.1.2.1  && < 1.6,
     text                   >= 0.11.1.5 && < 2.2,
     unordered-containers   >= 0.2      && < 0.3,
     semigroupoids          >= 4        && < 7
