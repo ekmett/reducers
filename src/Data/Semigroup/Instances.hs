@@ -1,14 +1,5 @@
-{-# LANGUAGE CPP #-}
-#if __GLASGOW_HASKELL__ >= 702 && __GLASGOW_HASKELL__ < 710
-{-# LANGUAGE Trustworthy #-}
-#endif
-{-# OPTIONS_GHC -fno-warn-orphans #-}
-module Data.Semigroup.Instances where
-
-#if !(MIN_VERSION_fingertree(0,1,2) && MIN_VERSION_base(4,9,0))
-import Data.FingerTree
-import Data.Semigroup
-
-instance Measured v a => Semigroup (FingerTree v a) where
-  (<>) = mappend
-#endif
+-- | Historically, this module defined an orphan @Semigroup@ instance for
+-- @FingerTree@ on old versions of @base@. Nowadays, the @reducers@ library
+-- no longer supports these old versions of @base@, so this module no longer
+-- defines anything. As such, you should not need to import this.
+module Data.Semigroup.Instances {-# DEPRECATED "This module no longer defines any instances. You should not need to import it." #-} where

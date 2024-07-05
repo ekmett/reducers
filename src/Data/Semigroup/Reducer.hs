@@ -1,7 +1,5 @@
 {-# LANGUAGE UndecidableInstances , FlexibleContexts , MultiParamTypeClasses , FlexibleInstances , GeneralizedNewtypeDeriving, TypeOperators, ScopedTypeVariables, CPP #-}
-#if __GLASGOW_HASKELL__ >= 702
 {-# LANGUAGE Trustworthy #-}
-#endif
 
 #ifndef MIN_VERSION_semigroups
 #define MIN_VERSION_semigroups(x,y,z) 1
@@ -29,19 +27,10 @@ module Data.Semigroup.Reducer
   , Count(..)
   ) where
 
-#if __GLASGOW_HASKELL__ < 710
-import Control.Applicative
-#endif
-
 import qualified Data.Monoid as Monoid
 import Data.Semigroup as Semigroup
 import Data.Semigroup.Foldable
-import Data.Semigroup.Instances ()
 import Data.Hashable
-
-#if __GLASGOW_HASKELL__ < 710
-import Data.Foldable
-#endif
 
 import Data.FingerTree
 
@@ -115,7 +104,7 @@ pureUnit = pure . unit
 newtype Count = Count { getCount :: Int } deriving
   ( Eq, Ord, Show, Read
 #ifdef LANGUAGE_DeriveDataTypeable
-  , Data, Typeable
+  , Data
 #endif
   )
 

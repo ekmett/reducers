@@ -1,8 +1,5 @@
 {-# LANGUAGE UndecidableInstances, FlexibleContexts, MultiParamTypeClasses, FlexibleInstances #-}
 {-# LANGUAGE CPP #-}
-#if __GLASGOW_HASKELL__ >= 702 && __GLASGOW_HASKELL__ < 710
-{-# LANGUAGE Trustworthy #-}
-#endif
 
 -----------------------------------------------------------------------------
 -- |
@@ -19,22 +16,11 @@ module Data.Semigroup.Reducer.With
   ( WithReducer(..)
   ) where
 
-#if __GLASGOW_HASKELL__ < 710
-import Control.Applicative
-#endif
 import Data.FingerTree
-#if __GLASGOW_HASKELL__ < 710
-import Data.Foldable
-import Data.Traversable
-#endif
 import Data.Hashable
-#if __GLASGOW_HASKELL__ < 710
-import Data.Monoid
-#endif
 import Data.Semigroup.Reducer
 import Data.Semigroup.Foldable
 import Data.Semigroup.Traversable
-import Data.Semigroup.Instances ()
 
 -- | If @m@ is a @c@-"Reducer", then m is @(c `WithReducer` m)@-"Reducer"
 --   This can be used to quickly select a "Reducer" for use as a 'FingerTree'

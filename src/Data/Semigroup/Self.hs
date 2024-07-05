@@ -1,8 +1,6 @@
 {-# LANGUAGE FlexibleInstances, MultiParamTypeClasses, GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE CPP #-}
-#if __GLASGOW_HASKELL__ >= 702
 {-# LANGUAGE Trustworthy #-}
-#endif
 
 -----------------------------------------------------------------------------
 -- |
@@ -26,11 +24,6 @@ module Data.Semigroup.Self
     ( Self(..)
     )  where
 
-#if __GLASGOW_HASKELL__ < 710
-import Control.Applicative
-import Data.Foldable
-import Data.Traversable
-#endif
 #if !(MIN_VERSION_base(4,11,0))
 import Data.Semigroup
 #endif

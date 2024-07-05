@@ -1,7 +1,4 @@
 {-# LANGUAGE UndecidableInstances, TypeOperators, FlexibleContexts, MultiParamTypeClasses, FlexibleInstances, TypeFamilies, CPP #-}
-#if __GLASGOW_HASKELL__ >= 702 && __GLASGOW_HASKELL__ < 710
-{-# LANGUAGE Trustworthy #-}
-#endif
 
 -----------------------------------------------------------------------------
 -- |
@@ -33,11 +30,6 @@ import Data.List.NonEmpty (NonEmpty)
 import Data.Semigroup.Foldable
 import Data.Semigroup.Reducer
 import Data.Generator
-
--- #if !(MIN_VERSION_base(4,8,0))
--- import Data.Monoid (Monoid(..))
--- import Data.Foldable (fold,foldMap)
--- #endif
 
 #if !(MIN_VERSION_base(4,11,0))
 import Data.Semigroup (Semigroup(..)) -- , WrappedMonoid(..))

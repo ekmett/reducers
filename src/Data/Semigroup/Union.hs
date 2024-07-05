@@ -1,8 +1,6 @@
 {-# LANGUAGE MultiParamTypeClasses, FlexibleInstances, GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE CPP #-}
-#if __GLASGOW_HASKELL__ >= 702
 {-# LANGUAGE Trustworthy #-}
-#endif
 module Data.Semigroup.Union
     ( module Data.Semigroup.Reducer
     -- * Unions of Containers
@@ -36,18 +34,12 @@ import Data.Set (Set)
 import qualified Data.List as List
 
 import Data.Hashable
-#if __GLASGOW_HASKELL__ < 710
-import Data.Functor
-import Data.Foldable
-import Data.Traversable
-#endif
 #if !(MIN_VERSION_base(4,11,0))
 import Data.Semigroup
 #endif
 import Data.Semigroup.Foldable
 import Data.Semigroup.Traversable
 import Data.Semigroup.Reducer
-import Data.Semigroup.Instances ()
 
 -- | A Container suitable for the 'Union' 'Monoid'
 class HasUnion f where

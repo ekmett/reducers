@@ -1,3 +1,11 @@
+next [????.??.??]
+-----------------
+* Require building with GHC 8.0 or later.
+* `Data.Semigroup.Instances` no longer defines an orphan `Semigroup` instance
+  for `FingerTree`, as this instance was only offered on old versions of `base`
+  that `reducers` no longer supports. As such, the `Data.Semigroup.Instances`
+  module is now deprecated.
+
 3.12.4 [2021.11.01]
 -------------------
 * Allow building with GHC 9.2.

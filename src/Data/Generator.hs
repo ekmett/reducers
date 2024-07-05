@@ -36,10 +36,6 @@ module Data.Generator
   , reduceWith
   ) where
 
-#if __GLASGOW_HASKELL__ < 710
-import Data.Monoid (Monoid, mappend, mempty)
-#endif
-
 import Data.Array
 import Data.Text (Text)
 import qualified Data.Text as Text
@@ -65,11 +61,7 @@ import Data.Map (Map)
 import Data.List.NonEmpty (NonEmpty)
 import qualified Data.List.NonEmpty as NonEmpty
 -- import Control.Parallel.Strategies (rseq, parMap)
-#if __GLASGOW_HASKELL__ < 710
-import Data.Foldable (fold,foldMap)
-#else
 import Data.Foldable (fold)
-#endif
 import Data.Semigroup.Reducer
 
 -- | minimal definition 'mapReduce' or 'mapTo'
@@ -167,11 +159,7 @@ instance Generator (Values (Map k v)) where
   type Elem (Values (Map k v)) = v
   mapReduce f = mapReduce f . Map.elems . getValues
 
-#if MIN_VERSION_base(4,9,0)
 instance Generator (Values (Array i e)) where
-#else
-instance Ix i => Generator (Values (Array i e)) where
-#endif
   type Elem (Values (Array i e)) = e
   mapReduce f = mapReduce f . elems . getValues
 

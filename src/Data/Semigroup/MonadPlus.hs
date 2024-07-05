@@ -1,8 +1,6 @@
 {-# LANGUAGE FlexibleInstances, MultiParamTypeClasses, GeneralizedNewtypeDeriving, FlexibleContexts, TypeOperators #-}
 {-# LANGUAGE CPP #-}
-#if __GLASGOW_HASKELL__ >= 702
 {-# LANGUAGE Trustworthy #-}
-#endif
 
 -----------------------------------------------------------------------------
 -- |
@@ -24,11 +22,6 @@ module Data.Semigroup.MonadPlus
 import Control.Applicative (Alternative(..))
 import Control.Monad (MonadPlus(..))
 import Data.Semigroup.Reducer (Reducer(..))
-
-#if !(MIN_VERSION_base(4,8,0))
-import Control.Applicative (Applicative(..))
-import Data.Monoid (Monoid(..))
-#endif
 
 #if !(MIN_VERSION_base(4,11,0))
 import Data.Semigroup (Semigroup(..))
