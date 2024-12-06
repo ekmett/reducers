@@ -1,5 +1,5 @@
-next [????.??.??]
------------------
+3.12.5 [2024.12.06]
+-------------------
 * Require building with GHC 8.0 or later.
 * `Data.Semigroup.Instances` no longer defines an orphan `Semigroup` instance
   for `FingerTree`, as this instance was only offered on old versions of `base`
